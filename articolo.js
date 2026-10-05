@@ -25,21 +25,20 @@ function parseFrontmatter(md) {
 
 async function loadArticle() {
     const params = new URLSearchParams(window.location.search);
-    const slug = params.get('slug');
+    const file = params.get('file');
 
-    if (!slug) {
+    if (!file) {
         document.getElementById('articleTitle').textContent = 'Articolo non trovato';
-        document.getElementById('articleBody').innerHTML = '<p>Nessuno slug fornito.</p>';
+        document.getElementById('articleBody').innerHTML = '<p>Nessun file specificato.</p>';
         return;
     }
 
-    // Prova prima in content/bar, poi in content/wiki
     let raw = null;
     let sourceFolder = 'bar';
 
     for (const folder of ['bar', 'wiki']) {
         try {
-            const res = await fetch(`${RAW_BASE}/content/${folder}/${slug}.md`);
+            const res = await fetch(`${RAW_BASE}/content/${folder}/${file}.md`);
             if (res.ok) {
                 raw = await res.text();
                 sourceFolder = folder;
@@ -95,7 +94,7 @@ async function loadArticle() {
         img.hidden = false;
     }
 
-    // Contenuto — usa marked.js per convertire Markdown in HTML
+    // Contenuto — usa marked.js
     const htmlContent = (typeof marked !== 'undefined')
         ? marked.parse(content)
         : content.replace(/\n/g, '<br>');

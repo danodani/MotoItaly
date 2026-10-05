@@ -46,6 +46,7 @@ async function fetchArticle(fileName) {
         const raw = await res.text();
         const { data } = parseFrontmatter(raw);
         return {
+            fileName: fileName.replace('.md', ''),
             title: data.title || fileName.replace('.md', ''),
             slug: data.slug || fileName.replace('.md', ''),
             date: data.date || '',
@@ -93,7 +94,7 @@ function renderArticles(articles) {
                 <span>·</span>
                 <span>${article.author}</span>
             </div>
-            <a href="articolo.html?slug=${article.slug}" class="card-link">Leggi di più →</a>
+            <a href="articolo.html?file=${article.fileName}" class="card-link">Leggi di più →</a>
         </article>
     `).join('');
 }
