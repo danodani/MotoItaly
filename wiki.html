@@ -26,21 +26,14 @@
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
                     <span class="theme-icon theme-icon-light" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                        </svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
                     </span>
                     <span class="theme-icon theme-icon-dark" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                     </span>
                 </button>
                 <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </button>
             </div>
             <nav class="main-nav" id="mainNav">
@@ -59,40 +52,11 @@
             <nav class="breadcrumb">
                 <a href="index.html">Home</a> <span>/</span> <span>Wiki Guide</span>
             </nav>
-            <h1 class="page-title">Wiki Guide</h1>
-            <p class="page-subtitle">Guide pratiche per ogni aspetto della vita in moto.</p>
+            <h1 class="page-title">📚 Wiki Guide</h1>
+            <p class="page-subtitle">Guide pratiche e normative per ogni aspetto della vita in moto.</p>
 
-            <div class="cards-grid">
-                <article class="content-card">
-                    <h3>🛠️ Manutenzione</h3>
-                    <p>Come prenderti cura della tua moto: catena, olio, gomme, freni e molto altro.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
-                <article class="content-card">
-                    <h3>🛡️ Sicurezza</h3>
-                    <p>Protezioni, guida difensiva e consigli per viaggiare sicuro.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
-                <article class="content-card">
-                    <h3>🧭 Viaggi</h3>
-                    <p>Itinerari, preparazione e consigli per il mototurismo.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
-                <article class="content-card">
-                    <h3>👕 Abbigliamento</h3>
-                    <p>Come scegliere casco, giacca, guanti e stivali.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
-                <article class="content-card">
-                    <h3>📋 Burocrazia</h3>
-                    <p>Bollo, assicurazione, revisione e pratiche.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
-                <article class="content-card">
-                    <h3>🔧 Riparazioni</h3>
-                    <p>Piccole riparazioni fai-da-te e quando andare dal meccanico.</p>
-                    <span class="card-tag tag-guide">In arrivo</span>
-                </article>
+            <div class="cards-grid" id="articlesGrid">
+                <div class="loading-state">Caricamento guide...</div>
             </div>
         </div>
     </main>
@@ -105,5 +69,6 @@
     </footer>
 
     <script src="script.js" defer></script>
+    <script src="wiki.js" defer></script>
 </body>
 </html>

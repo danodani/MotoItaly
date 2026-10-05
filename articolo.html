@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Il Bar del Motociclista: storie, opinioni, test di accessori e avventure dal mondo delle due ruote.">
-    <title>Il Bar del Motociclista - Moto Italy</title>
+    <meta name="description" content="Leggi articoli e guide su Moto Italy.">
+    <title>Articolo - Moto Italy</title>
     <script>
         (function() {
             const saved = localStorage.getItem('theme');
@@ -47,17 +47,47 @@
         </div>
     </header>
 
-    <main class="page-content">
+    <main class="article-page">
         <div class="container">
-            <nav class="breadcrumb">
-                <a href="index.html">Home</a> <span>/</span> <span>Il Bar del Motociclista</span>
+            <nav class="breadcrumb" id="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span>
+                <a href="bar.html" id="breadcrumbSection">Il Bar</a> <span>/</span>
+                <span id="breadcrumbTitle">Articolo</span>
             </nav>
-            <h1 class="page-title">☕ Il Bar del Motociclista</h1>
-            <p class="page-subtitle">Storie, recensioni e opinioni dal mondo delle due ruote. Tono informale, zero peli sulla lingua.</p>
 
-            <div class="cards-grid" id="articlesGrid">
-                <div class="loading-state">Caricamento articoli...</div>
-            </div>
+            <article class="article-container">
+                <header class="article-header">
+                    <span class="article-category" id="articleCategory"></span>
+                    <h1 class="article-title" id="articleTitle">Caricamento...</h1>
+                    <div class="article-meta" id="articleMeta">
+                        <span id="articleDate"></span>
+                        <span>·</span>
+                        <span id="articleAuthor"></span>
+                        <span>·</span>
+                        <span id="readingTime"></span>
+                    </div>
+                    <img id="articleImage" class="article-featured-image" src="" alt="" hidden>
+                </header>
+
+                <div class="article-body" id="articleBody">
+                    <p>Caricamento contenuto...</p>
+                </div>
+
+                <div class="gpx-download" id="gpxBox" hidden>
+                    <a href="#" id="gpxLink" class="btn btn-primary" download>🗺️ Scarica traccia GPX</a>
+                    <p class="gpx-note">File pronto per navigatori GPS (Garmin, TomTom, Calimoto, Kurviger).</p>
+                </div>
+
+                <div class="affiliate-disclaimer" id="affiliateDisclaimer" hidden>
+                    <p><strong>Trasparenza:</strong> Questo articolo contiene link di affiliazione. Se acquisti tramite questi link, potremmo ricevere una piccola commissione senza costi aggiuntivi per te.</p>
+                </div>
+
+                <div class="community-box">
+                    <h3>💬 Discuti su Reddit</h3>
+                    <p>Questo articolo nasce dalla community. Hai opinioni, esperienze o correzioni? Unisciti alla discussione su <strong>r/MotoItaly</strong>.</p>
+                    <a href="https://www.reddit.com/r/MotoItaly/" target="_blank" rel="noopener" class="btn btn-secondary">Vai alla discussione →</a>
+                </div>
+            </article>
         </div>
     </main>
 
@@ -69,6 +99,7 @@
     </footer>
 
     <script src="script.js" defer></script>
-    <script src="bar.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="articolo.js" defer></script>
 </body>
 </html>
