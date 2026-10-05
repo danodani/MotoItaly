@@ -1,58 +1,42 @@
-# ============================================================
-# CONFIGURAZIONE DECAP CMS — MOTO ITALY
-# ============================================================
-# Backend: GitHub (richiede OAuth per l'autenticazione)
-# Contenuti: Markdown con frontmatter
-# ============================================================
-
 backend:
   name: github
-  repo: TUO_USERNAME/moto-italy-portal   # Sostituisci con il tuo repository
+  repo: danodani/MotoItaly
   branch: main
-  base_url: https://IL_TUO_SITO.pages.dev  # URL del sito su Cloudflare Pages
-  auth_endpoint: /api/auth                 # Endpoint OAuth gestito dalla Function
+  base_url: https://motoitaly.pages.dev
+  auth_endpoint: /api/auth
 
-# Cartelle per i media
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
 
-# Lingua dell'interfaccia
 locale: "it"
 
-# ============================================================
-# COLLEZIONI
-# ============================================================
 collections:
-  # ============ BLOG / IL BAR DEL MOTOCICLISTA ============
-  - name: "blog"
-    label: "📰 Il Bar del Motociclista"
-    label_singular: "Post del Bar"
-    folder: "content/blog"
+  # ============ IL BAR DEL MOTOCICLISTA (BLOG) ============
+  - name: "bar"
+    label: "☕ Il Bar del Motociclista"
+    label_singular: "Post da Bar"
+    folder: "content/bar"
     create: true
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "articolo.html?file={{path}}"
     sort: "date:desc"
-    view_filters:
-      - label: "Pubblicati"
-        field: draft
-        pattern: false
     fields:
-      - { label: "Titolo", name: "title", widget: "string", hint: "Titolo dell'articolo" }
-      - { label: "Slug (URL)", name: "slug", widget: "string", hint: "es. 5-errori-guida-estate" }
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Slug (URL)", name: "slug", widget: "string" }
       - { label: "Data di pubblicazione", name: "date", widget: "datetime" }
       - label: "Categoria"
         name: "category"
         widget: "select"
         options:
           - { label: "Wiki / Normative", value: "wiki" }
-          - { label: "Blog / Da Bar", value: "blog" }
+          - { label: "Blog / Da Bar", value: "bar" }
+        default: "bar"
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
-      - { label: "Estratto (sommario)", name: "excerpt", widget: "text", hint: "Breve descrizione per le card di anteprima" }
-      - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false, hint: "Se spuntato, mostra il disclaimer AGCM in fondo all'articolo" }
-      - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false, hint: "Carica una traccia GPS per i navigatori" }
+      - { label: "Estratto", name: "excerpt", widget: "text" }
+      - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false }
+      - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }
 
   # ============ WIKI / GUIDE E NORMATIVE ============
@@ -64,7 +48,6 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "articolo.html?file={{path}}"
     sort: "date:desc"
     fields:
       - { label: "Titolo", name: "title", widget: "string" }
@@ -75,7 +58,8 @@ collections:
         widget: "select"
         options:
           - { label: "Wiki / Normative", value: "wiki" }
-          - { label: "Blog / Da Bar", value: "blog" }
+          - { label: "Blog / Da Bar", value: "bar" }
+        default: "wiki"
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
       - { label: "Estratto", name: "excerpt", widget: "text" }
