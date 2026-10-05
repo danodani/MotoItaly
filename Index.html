@@ -3,22 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MotoItaly - I tuoi Tool</title>
-    <style>
-        body { font-family: sans-serif; background-color: #1a1a1a; color: white; text-align: center; padding: 50px; }
-        .container { max-width: 800px; margin: auto; border: 1px solid #e74c3c; padding: 20px; border-radius: 15px; }
-        h1 { color: #e74c3c; }
-        .tool-card { background: #2c3e50; padding: 15px; margin: 10px; border-radius: 10px; display: inline-block; width: 200px; }
-    </style>
+    <meta name="description" content="Moto Italy - Il portale italiano con strumenti, comparatori e calcolatori per il mondo delle moto.">
+    <title>Moto Italy - Portale</title>
+
+    <!-- Script anti-flash: applica il tema PRIMA che la pagina venga renderizzata -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>MotoItaly 🏍️</h1>
-        <p>Benvenuto nella tua officina digitale. PorcoDIo!!</p>
-        <div class="tool-card">
-            <h3>Tool 1</h3>
-            <p>Descrizione script Python</p>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <!-- SOSTITUISCI logo.png con il nome del tuo file logo -->
+                <img src="logo.png" alt="Moto Italy" class="logo-img">
+                <span class="logo-text">Moto Italy</span>
+            </a>
+
+            <div class="header-actions">
+                <!-- Toggle tema -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+                    <span class="theme-icon theme-icon-auto" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-light" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="#tools">Strumenti</a></li>
+                    <li><a href="#guide">Guide</a></li>
+                    <li><a href="#chi-siamo">Chi Siamo</a></li>
+                </ul>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <h1>Strumenti intelligenti per chi ama le moto</h1>
+            <p class="hero-subtitle">
+                Quiz, comparatori e calcolatori per aiutarti a scegliere, confrontare e gestire la tua moto. 
+                Gratis, senza registrazione.
+            </p>
+            <div class="hero-actions">
+                <a href="#tools" class="btn btn-primary">Esplora gli strumenti</a>
+                <a href="#chi-siamo" class="btn btn-secondary">Scopri di più</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">5.000+</span>
+                    <span class="stat-label">Membri community</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Strumenti in arrivo</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Gratis</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="tools-section" id="tools">
+        <div class="container">
+            <div class="section-header">
+                <h2>I nostri strumenti</h2>
+                <p>Strumenti pratici per ogni decisione legata alla tua moto.</p>
+            </div>
+            <div class="tools-grid">
+                <article class="tool-card" data-category="quiz">
+                    <div class="card-icon">🎯</div>
+                    <h3>Che moto fa per te?</h3>
+                    <p>Rispondi a poche domande e scopri quale tipo di moto si adatta al tuo stile di guida, al tuo budget e alla tua esperienza.</p>
+                    <span class="card-tag tag-quiz">Quiz</span>
+                    <a href="#" class="card-link">Prossimamente →</a>
+                </article>
+
+                <article class="tool-card" data-category="comparatore">
+                    <div class="card-icon">⚖️</div>
+                    <h3>Comparatore modelli</h3>
+                    <p>Confronta specifiche tecniche, prezzi e caratteristiche di due o più moto per prendere una decisione informata.</p>
+                    <span class="card-tag tag-comparatore">Comparatore</span>
+                    <a href="#" class="card-link">Prossimamente →</a>
+                </article>
+
+                <article class="tool-card" data-category="calcolatore">
+                    <div class="card-icon">🧮</div>
+                    <h3>Calcolatore bollo moto</h3>
+                    <p>Stima il bollo annuale in base a modello, potenza, classe Euro e regione di residenza.</p>
+                    <span class="card-tag tag-calcolatore">Calcolatore</span>
+                    <a href="bollo.html" class="card-link">Calcola ora →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUIDE -->
+    <section class="guide-section" id="guide">
+        <div class="container">
+            <div class="section-header">
+                <h2>Guide e consigli</h2>
+                <p>Approfondimenti per scegliere, mantenere e goderti la tua moto.</p>
+            </div>
+            <div class="guide-grid">
+                <article class="guide-card">
+                    <h3>Migliori caschi touring 2026</h3>
+                    <p>Confort, silenziosità e sicurezza: la guida completa per il mototurista.</p>
+                    <a href="#" class="guide-link">Leggi di più →</a>
+                </article>
+                <article class="guide-card">
+                    <h3>Manutenzione catena: guida passo passo</h3>
+                    <p>Tutto quello che devi sapere per mantenere la trasmissione in forma.</p>
+                    <a href="#" class="guide-link">Leggi di più →</a>
+                </article>
+                <article class="guide-card">
+                    <h3>Come scegliere gli stivali da moto</h3>
+                    <p>Protezione, comfort e stile: i criteri per un acquisto consapevole.</p>
+                    <a href="#" class="guide-link">Leggi di più →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHI SIAMO -->
+    <section class="about-section" id="chi-siamo">
+        <div class="container about-content">
+            <h2>Chi siamo</h2>
+            <p>
+                Moto Italy nasce da una community di appassionati di moto su Reddit. 
+                Questo portale è il nostro tentativo di offrire strumenti pratici e utili 
+                a chiunque ami le due ruote in Italia. Nessuna pubblicità invasiva, 
+                solo strumenti che speriamo ti facciano risparmiare tempo e denaro.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            <p class="footer-note">
+                Questo sito contiene link di affiliazione. Se acquisti tramite questi link, 
+                potremmo ricevere una piccola commissione senza costi aggiuntivi per te, questo ci aiuta a mantenere il sito attivo e gratuito per tutti gli utenti.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

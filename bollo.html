@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calcola il bollo della tua moto in base a modello, potenza e regione. Strumento gratuito di Moto Italy.">
+    <title>Calcolatore Bollo Moto - Moto Italy</title>
+
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Moto Italy" class="logo-img">
+                <span class="logo-text">Moto Italy</span>
+            </a>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+                    <span class="theme-icon theme-icon-auto" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-light" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html#tools">Strumenti</a></li>
+                    <li><a href="index.html#guide">Guide</a></li>
+                    <li><a href="index.html#chi-siamo">Chi Siamo</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="tool-page">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> <span>Calcolatore Bollo Moto</span>
+            </nav>
+
+            <div class="tool-centered">
+                <h1 class="tool-title">Calcolatore Bollo Moto</h1>
+                <p class="tool-subtitle">Seleziona il modello o inserisci i dati manualmente per ottenere una stima del bollo annuale.</p>
+
+                <div class="calculator-card">
+                    <!-- SELEZIONE MODELLO -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="marcaSelect">Marca</label>
+                            <select id="marcaSelect">
+                                <option value="">— Seleziona marca —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modelloSelect">Modello</label>
+                            <select id="modelloSelect" disabled>
+                                <option value="">— Prima scegli la marca —</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annoSelect">Anno</label>
+                        <select id="annoSelect" disabled>
+                            <option value="">— Prima scegli il modello —</option>
+                        </select>
+                    </div>
+
+                    <!-- REGIONE: sempre visibile -->
+                    <div class="form-group">
+                        <label for="regioneSelect">Regione di residenza</label>
+                        <select id="regioneSelect">
+                            <option value="">— Seleziona regione —</option>
+                            <option value="abruzzo">Abruzzo</option>
+                            <option value="basilicata">Basilicata</option>
+                            <option value="calabria">Calabria</option>
+                            <option value="campania">Campania</option>
+                            <option value="emilia-romagna">Emilia-Romagna</option>
+                            <option value="friuli">Friuli-Venezia Giulia</option>
+                            <option value="lazio">Lazio</option>
+                            <option value="liguria">Liguria</option>
+                            <option value="lombardia">Lombardia</option>
+                            <option value="marche">Marche</option>
+                            <option value="molise">Molise</option>
+                            <option value="piemonte">Piemonte</option>
+                            <option value="puglia">Puglia</option>
+                            <option value="sardegna">Sardegna</option>
+                            <option value="sicilia">Sicilia</option>
+                            <option value="toscana">Toscana</option>
+                            <option value="trentino">Trentino-Alto Adige</option>
+                            <option value="umbria">Umbria</option>
+                            <option value="valle-aosta">Valle d'Aosta</option>
+                            <option value="veneto">Veneto</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-secondary btn-block" id="usaDatiManualiBtn">Oppure inserisci i dati manualmente</button>
+
+                    <!-- DATI MANUALI: potenza e classe Euro -->
+                    <div id="datiManuali" class="manual-fields" hidden>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="potenzaInput">Potenza</label>
+                                <input type="number" id="potenzaInput" min="0" step="1" placeholder="Es. 88" value="88">
+                            </div>
+                            <div class="form-group">
+                                <label for="unitaPotenza">Unità</label>
+                                <select id="unitaPotenza">
+                                    <option value="kW">kW</option>
+                                    <option value="CV">CV</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="euroSelect">Classe Euro</label>
+                            <select id="euroSelect">
+                                <option value="Euro 0">Euro 0</option>
+                                <option value="Euro 1">Euro 1</option>
+                                <option value="Euro 2">Euro 2</option>
+                                <option value="Euro 3">Euro 3</option>
+                                <option value="Euro 4">Euro 4</option>
+                                <option value="Euro 5" selected>Euro 5</option>
+                                <option value="Euro 5+">Euro 5+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" id="calcolaBtn" disabled>Calcola bollo</button>
+
+                    <div class="result-box" id="resultBox" hidden>
+                        <h3>Risultato</h3>
+                        <p class="result-amount" id="resultAmount">—</p>
+                        <p class="result-detail" id="resultDetail"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            <p class="footer-note">
+                Questo sito contiene link di affiliazione. Se acquisti tramite questi link, 
+                potremmo ricevere una piccola commissione senza costi aggiuntivi per te.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="bollo.js"></script>
+</body>
+</html>
