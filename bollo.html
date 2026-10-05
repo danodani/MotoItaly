@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Calcola il bollo della tua moto in base a modello, potenza e regione. Strumento gratuito di Moto Italy.">
+    <meta name="description" content="Calcola il bollo della tua moto in base a modello, potenza, classe Euro e regione. Strumento gratuito di Moto Italy.">
     <title>Calcolatore Bollo Moto - Moto Italy</title>
 
+    <!-- Anti-flash script: bloccante, immediato, senza DOMContentLoaded -->
     <script>
         (function() {
             const saved = localStorage.getItem('theme');
@@ -15,10 +16,31 @@
         })();
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font locale (nessuna chiamata a Google) -->
+    <link rel="preload" href="fonts/inter-v18-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/inter-v18-latin-600.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
+
+    <!-- JSON-LD: WebApplication + FinancialProduct -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calcolatore Bollo Moto",
+        "description": "Calcola il bollo della tua moto in base a modello, potenza, classe Euro e regione di residenza.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "Moto Italy"
+        }
+    }
+    </script>
 </head>
 <body>
     <header class="site-header">
@@ -27,7 +49,6 @@
                 <img src="logo.png" alt="Moto Italy" class="logo-img">
                 <span class="logo-text">Moto Italy</span>
             </a>
-
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
                     <span class="theme-icon theme-icon-auto" aria-hidden="true">
@@ -48,14 +69,12 @@
                         </svg>
                     </span>
                 </button>
-
                 <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
             </div>
-
             <nav class="main-nav" id="mainNav">
                 <ul>
                     <li><a href="index.html#tools">Strumenti</a></li>
@@ -77,7 +96,6 @@
                 <p class="tool-subtitle">Seleziona il modello o inserisci i dati manualmente per ottenere una stima del bollo annuale.</p>
 
                 <div class="calculator-card">
-                    <!-- SELEZIONE MODELLO -->
                     <div class="form-row">
                         <div class="form-group">
                             <label for="marcaSelect">Marca</label>
@@ -100,7 +118,6 @@
                         </select>
                     </div>
 
-                    <!-- REGIONE: sempre visibile -->
                     <div class="form-group">
                         <label for="regioneSelect">Regione di residenza</label>
                         <select id="regioneSelect">
@@ -128,14 +145,29 @@
                         </select>
                     </div>
 
+                    <!-- Opzioni moto d'epoca e A2 -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="annoMotoSelect">Anzianità moto</label>
+                            <select id="annoMotoSelect" inputmode="numeric">
+                                <option value="0">Meno di 20 anni</option>
+                                <option value="20">20-29 anni (storica con CRS)</option>
+                                <option value="30">30+ anni (esente)</option>
+                            </select>
+                        </div>
+                        <div class="form-group checkbox-group" style="display:flex; align-items:center; gap:8px; padding-top:28px;">
+                            <input type="checkbox" id="a2Checkbox" disabled>
+                            <label for="a2Checkbox" style="margin:0; font-weight:500;">Versione depotenziata A2 (35 kW)</label>
+                        </div>
+                    </div>
+
                     <button class="btn btn-secondary btn-block" id="usaDatiManualiBtn">Oppure inserisci i dati manualmente</button>
 
-                    <!-- DATI MANUALI: potenza e classe Euro -->
                     <div id="datiManuali" class="manual-fields" hidden>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="potenzaInput">Potenza</label>
-                                <input type="number" id="potenzaInput" min="0" step="1" placeholder="Es. 88" value="88">
+                                <input type="number" id="potenzaInput" min="0" step="1" placeholder="Es. 88" value="88" inputmode="decimal">
                             </div>
                             <div class="form-group">
                                 <label for="unitaPotenza">Unità</label>
@@ -145,7 +177,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label for="euroSelect">Classe Euro</label>
                             <select id="euroSelect">
@@ -167,6 +198,9 @@
                         <p class="result-amount" id="resultAmount">—</p>
                         <p class="result-detail" id="resultDetail"></p>
                     </div>
+
+                    <!-- Disclosure affiliazioni (AGCM) -->
+                    <p class="affiliate-disclosure">Questo tool è gratuito. Eventuali link di affiliazione presenti saranno chiaramente contrassegnati.</p>
                 </div>
             </div>
         </div>
@@ -176,13 +210,14 @@
         <div class="container footer-inner">
             <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
             <p class="footer-note">
-                Questo sito contiene link di affiliazione. Se acquisti tramite questi link, 
+                Questo sito contiene link di affiliazione. Se acquisti tramite questi link,
                 potremmo ricevere una piccola commissione senza costi aggiuntivi per te.
             </p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="bollo.js"></script>
+    <script src="script.js" defer></script>
+    <script src="moto-data.js" defer></script>
+    <script src="bollo.js" defer></script>
 </body>
 </html>

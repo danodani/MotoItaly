@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Il Bar del Motociclista: blog, storie, recensioni e opinioni dal mondo delle due ruote.">
+    <title>Il Bar del Motociclista - Moto Italy</title>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="preload" href="fonts/inter-v18-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Moto Italy" class="logo-img">
+                <span class="logo-text">Moto Italy</span>
+            </a>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+                    <span class="theme-icon theme-icon-light" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="wiki.html">Wiki Guide</a></li>
+                    <li><a href="strumenti.html">Strumenti Utili</a></li>
+                    <li><a href="bar.html">Il Bar del Motociclista</a></li>
+                    <li><a href="contatti.html">Contattaci</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> <span>Il Bar del Motociclista</span>
+            </nav>
+            <h1 class="page-title">Il Bar del Motociclista</h1>
+            <p class="page-subtitle">Storie, recensioni e opinioni dal mondo delle due ruote.</p>
+
+            <div class="cards-grid">
+                <article class="content-card">
+                    <h3>In sella alla Transfagarasan: il mio viaggio in Romania</h3>
+                    <p>Un diario di viaggio tra curve, paesaggi e incontri inaspettati.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+                <article class="content-card">
+                    <h3>10 accessori indispensabili per il mototurista</h3>
+                    <p>Cosa non può mancare nella tua borsa prima di partire.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+                <article class="content-card">
+                    <h3>La prima moto: consigli per neofiti</h3>
+                    <p>Come scegliere la moto giusta per iniziare senza sbagliare.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+                <article class="content-card">
+                    <h3>Recensione: casco X con interfono integrato</h3>
+                    <p>Pro e contro dopo 5.000 km di utilizzo.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+                <article class="content-card">
+                    <h3>Manutenzione fai-da-te: cambio olio passo passo</h3>
+                    <p>Risparmia sul tagliando con questa guida illustrata.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+                <article class="content-card">
+                    <h3>Le 5 strade più belle d'Italia da percorrere in moto</h3>
+                    <p>Un itinerario tra le curve più emozionanti del Bel Paese.</p>
+                    <span class="card-tag tag-guide">In arrivo</span>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            <p class="footer-note">Questo sito contiene link di affiliazione. Se acquisti tramite questi link, potremmo ricevere una piccola commissione senza costi aggiuntivi per te.</p>
+        </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

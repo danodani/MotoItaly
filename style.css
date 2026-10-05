@@ -1,3 +1,7 @@
+/* ============================================================
+   MOTO ITALY — FOGLIO DI STILE UNICO
+   ============================================================ */
+
 /* ===== RESET E BASE ===== */
 * {
     margin: 0;
@@ -33,17 +37,48 @@
     --color-primary: #f97316;
     --color-primary-hover: #fb923c;
     --color-border: #2a2e36;
-    --color-white: #ffffff;
     --color-header-bg: rgba(15,17,21,0.95);
     --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
     --shadow-hover: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-/* Transizione fluida al cambio tema */
-body, .site-header, .tool-card, .guide-card, .site-footer {
+/* ===== FONT LOCALI ===== */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('fonts/inter-v18-latin-400.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('fonts/inter-v18-latin-500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('fonts/inter-v18-latin-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('fonts/inter-v18-latin-700.woff2') format('woff2');
+}
+
+/* ===== TRANSIZIONI TEMA ===== */
+body, .site-header, .tool-card, .guide-card, .site-footer,
+.calculator-card, .form-group select, .form-group input {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* ===== BODY E LAYOUT BASE ===== */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--color-text);
@@ -65,6 +100,7 @@ body {
     z-index: 100;
     background: var(--color-header-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -94,7 +130,6 @@ body {
 }
 
 .logo-text {
-    /* Nasconde il testo su mobile se preferisci solo l'immagine */
     white-space: nowrap;
 }
 
@@ -117,8 +152,7 @@ body {
     background: var(--color-card-bg);
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
+    transition: border-color 0.2s, color 0.2s, background-color 0.3s;
 }
 
 .theme-toggle:hover {
@@ -135,22 +169,6 @@ body {
 /* Mostra l'icona giusta in base al tema attivo */
 html[data-theme="light"] .theme-icon-light,
 html[data-theme="dark"] .theme-icon-dark {
-    display: flex;
-}
-
-/* Se non c'è data-theme (fallback), mostra auto */
-html:not([data-theme]) .theme-icon-auto {
-    display: flex;
-}
-
-/* Quando l'utente ha scelto "auto", data-theme viene rimosso dal JS e si mostra l'icona auto */
-html[data-theme-mode="auto"] .theme-icon-auto,
-html[data-theme-mode="auto"] .theme-icon-light,
-html[data-theme-mode="auto"] .theme-icon-dark {
-    display: none;
-}
-
-html[data-theme-mode="auto"] .theme-icon-auto {
     display: flex;
 }
 
@@ -222,38 +240,6 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     margin-bottom: 48px;
 }
 
-.btn {
-    display: inline-block;
-    padding: 12px 28px;
-    border-radius: var(--radius);
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background: var(--color-primary);
-    color: #ffffff;
-}
-
-.btn-primary:hover {
-    background: var(--color-primary-hover);
-    transform: translateY(-1px);
-}
-
-.btn-secondary {
-    background: var(--color-card-bg);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-}
-
-.btn-secondary:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
 .hero-stats {
     display: flex;
     justify-content: center;
@@ -278,8 +264,70 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     color: var(--color-text-muted);
 }
 
-/* ===== TOOLS ===== */
+/* ===== BUTTONS ===== */
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-primary {
+    color: #0f1115;
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: var(--color-card-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px;
+    font-size: 1rem;
+}
+
+/* ===== SEZIONI ===== */
 .tools-section {
+    padding: 80px 0;
+}
+
+.guide-section {
+    padding: 80px 0;
+    background: var(--color-bg-alt);
+}
+
+.about-section {
     padding: 80px 0;
 }
 
@@ -298,6 +346,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     color: var(--color-text-muted);
 }
 
+/* ===== TOOLS GRID ===== */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -310,7 +359,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     border-radius: var(--radius);
     padding: 32px 28px;
     box-shadow: var(--shadow);
-    transition: all 0.25s;
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s, background-color 0.3s;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -361,7 +410,6 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     color: #065f46;
 }
 
-/* Adatta i tag al tema scuro */
 [data-theme="dark"] .tag-quiz {
     background: #422006;
     color: #fcd34d;
@@ -389,12 +437,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     text-decoration: underline;
 }
 
-/* ===== GUIDE ===== */
-.guide-section {
-    padding: 80px 0;
-    background: var(--color-bg-alt);
-}
-
+/* ===== GUIDE GRID ===== */
 .guide-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -407,7 +450,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     border-radius: var(--radius);
     padding: 28px;
     box-shadow: var(--shadow);
-    transition: all 0.25s;
+    transition: box-shadow 0.25s, transform 0.25s, background-color 0.3s;
 }
 
 .guide-card:hover {
@@ -439,10 +482,6 @@ html[data-theme-mode="auto"] .theme-icon-auto {
 }
 
 /* ===== ABOUT ===== */
-.about-section {
-    padding: 80px 0;
-}
-
 .about-content {
     max-width: 720px;
     text-align: center;
@@ -484,192 +523,9 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     max-width: 500px;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-
-    .logo-text {
-        display: none; /* su mobile mostra solo il logo */
-    }
-
-    .main-nav {
-        display: none;
-        position: absolute;
-        top: 64px;
-        left: 0;
-        right: 0;
-        background: var(--color-card-bg);
-        border-bottom: 1px solid var(--color-border);
-        padding: 16px 20px;
-    }
-
-    .main-nav.open {
-        display: block;
-    }
-
-    .main-nav ul {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .hero {
-        padding: 56px 0 40px;
-    }
-
-    .hero-stats {
-        gap: 28px;
-    }
-
-    .tools-section,
-    .guide-section,
-    .about-section {
-        padding: 56px 0;
-    }
-}
-
-/* ===== PAGINA TOOL (CALCOLATORI) ===== */
-.tool-page {
-    padding: 40px 0 80px;
-    min-height: calc(100vh - 200px);
-}
-
-.breadcrumb {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    margin-bottom: 24px;
-}
-
-.breadcrumb a {
-    color: var(--color-primary);
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb span {
-    margin: 0 6px;
-}
-
-.tool-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.tool-subtitle {
-    color: var(--color-text-muted);
-    font-size: 1.05rem;
-    margin-bottom: 40px;
-}
-
-.calculator-card {
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 32px;
-    box-shadow: var(--shadow);
-    max-width: 600px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-    color: var(--color-text);
-}
-
-.form-group select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: inherit;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 42px;
-}
-
-.form-group select:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
-}
-
-.btn-block {
-    width: 100%;
-    margin-top: 8px;
-    padding: 14px;
-    font-size: 1rem;
-}
-
-.btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.result-box {
-    margin-top: 28px;
-    padding: 24px;
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    text-align: center;
-}
-
-.result-box h3 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-}
-
-.result-amount {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 8px;
-}
-
-.result-detail {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-    .calculator-card {
-        padding: 24px 20px;
-    }
-
-    .tool-title {
-        font-size: 1.6rem;
-    }
-
-    .result-amount {
-        font-size: 2rem;
-    }
-}
-
-/* ===== PAGINA TOOL CENTRATA ===== */
+/* ============================================================
+   PAGINA TOOL (CALCOLATORI) — versione unificata
+   ============================================================ */
 .tool-page {
     padding: 40px 0 80px;
     min-height: calc(100vh - 200px);
@@ -728,6 +584,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     text-align: left;
 }
 
+/* ===== FORM ===== */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -747,7 +604,8 @@ html[data-theme-mode="auto"] .theme-icon-auto {
 }
 
 .form-group select,
-.form-group input[type="number"] {
+.form-group input[type="number"],
+.form-group input[type="text"] {
     width: 100%;
     padding: 12px 16px;
     border: 1px solid var(--color-border);
@@ -757,10 +615,11 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     font-family: inherit;
     font-size: 1rem;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
 }
 
-.form-group input[type="number"] {
+.form-group input[type="number"],
+.form-group input[type="text"] {
     cursor: text;
     appearance: textfield;
 }
@@ -772,7 +631,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
 }
 
 .form-group select:focus,
-.form-group input[type="number"]:focus {
+.form-group input:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
@@ -785,10 +644,15 @@ html[data-theme-mode="auto"] .theme-icon-auto {
 
 .form-group select {
     appearance: none;
+    -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 42px;
+}
+
+[data-theme="dark"] .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
 .manual-fields {
@@ -798,19 +662,7 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     margin-top: 8px;
 }
 
-.btn-block {
-    width: 100%;
-    margin-top: 8px;
-    padding: 14px;
-    font-size: 1rem;
-}
-
-.btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
+/* ===== RESULT BOX ===== */
 .result-box {
     margin-top: 28px;
     padding: 24px;
@@ -842,7 +694,98 @@ html[data-theme-mode="auto"] .theme-icon-auto {
     line-height: 1.5;
 }
 
+/* ===== CHECKBOX GROUP ===== */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-weight: 500;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== DISCLOSURE AFFILIAZIONI ===== */
+.affiliate-disclosure {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    line-height: 1.4;
+}
+
+.affiliate-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+/* ============================================================
+   RESPONSIVE — un'unica media query
+   ============================================================ */
 @media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .logo-text {
+        display: none;
+    }
+
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--color-card-bg);
+        border-bottom: 1px solid var(--color-border);
+        padding: 16px 20px;
+    }
+
+    .main-nav.open {
+        display: block;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .hero {
+        padding: 56px 0 40px;
+    }
+
+    .hero-stats {
+        gap: 28px;
+    }
+
+    .tools-section,
+    .guide-section,
+    .about-section {
+        padding: 56px 0;
+    }
+
     .calculator-card {
         padding: 24px 20px;
     }
@@ -857,5 +800,180 @@ html[data-theme-mode="auto"] .theme-icon-auto {
 
     .form-row {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   NUOVE SEZIONI: COMMUNITY, PAGINE, CARDS, CONTATTI
+   ============================================================ */
+
+/* ===== COMMUNITY STATS ===== */
+.community-section {
+    padding: 80px 0;
+    background: var(--color-bg-alt);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.stat-card .stat-label {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+/* ===== CTA STRUMENTI ===== */
+.tools-cta {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* ===== PAGINE GENERICHE ===== */
+.page-content {
+    padding: 40px 0 80px;
+    min-height: calc(100vh - 200px);
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+}
+
+/* ===== CARDS GRID (Wiki, Bar, Strumenti) ===== */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.content-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s, background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.content-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+    border-color: var(--color-primary);
+}
+
+.content-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.content-card p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.tag-guide {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+[data-theme="dark"] .tag-guide {
+    background: #2e1065;
+    color: #c4b5fd;
+}
+
+/* ===== CONTATTI ===== */
+.contact-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+}
+
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+}
+
+/* ===== RESPONSIVE AGGIUNTIVO ===== */
+@media (max-width: 768px) {
+    .community-section {
+        padding: 56px 0;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .stat-card .stat-number {
+        font-size: 1.6rem;
+    }
+
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .contact-card {
+        padding: 24px 20px;
     }
 }

@@ -1,54 +1,42 @@
-// ===== GESTIONE TEMA =====
+// ============================================================
+// MOTO ITALY — SCRIPT PRINCIPALE
+// ============================================================
+
+// ===== GESTIONE TEMA (2 STATI) =====
 const themeToggle = document.getElementById('themeToggle');
 const root = document.documentElement;
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-// Determina lo stato attuale del tema
-// 'auto' | 'light' | 'dark'
-function getThemeMode() {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light' || saved === 'dark') return saved;
-    return 'auto';
+function getActiveTheme() {
+    return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 }
 
-// Applica il tema in base al modo
-function applyTheme(mode) {
-    if (mode === 'auto') {
-        // Rimuove data-theme per far decidere al CSS tramite prefers-color-scheme? 
-        // No: il CSS non ha un blocco @media prefers-color-scheme. 
-        // Quindi applichiamo manualmente il tema di sistema.
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        root.setAttribute('data-theme', systemDark ? 'dark' : 'light');
-        root.setAttribute('data-theme-mode', 'auto');
-        localStorage.removeItem('theme');
+function setTheme(theme, persist) {
+    root.setAttribute('data-theme', theme);
+    if (persist) localStorage.setItem('theme', theme);
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+        setTheme(saved, false);
     } else {
-        root.setAttribute('data-theme', mode);
-        root.setAttribute('data-theme-mode', mode);
-        localStorage.setItem('theme', mode);
+        setTheme(systemPrefersDark.matches ? 'dark' : 'light', false);
     }
 }
 
-// Ciclo dei temi: auto -> light -> dark -> auto
-function cycleTheme() {
-    const current = getThemeMode();
-    let next;
-    if (current === 'auto') next = 'light';
-    else if (current === 'light') next = 'dark';
-    else next = 'auto';
-    applyTheme(next);
-}
+initTheme();
 
-// Inizializza al caricamento
-applyTheme(getThemeMode());
-
-// Click sul toggle
 if (themeToggle) {
-    themeToggle.addEventListener('click', cycleTheme);
+    themeToggle.addEventListener('click', () => {
+        const next = getActiveTheme() === 'dark' ? 'light' : 'dark';
+        setTheme(next, true);
+    });
 }
 
-// Ascolta i cambiamenti del sistema operativo (solo se in modalità auto)
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (getThemeMode() === 'auto') {
-        applyTheme('auto');
+systemPrefersDark.addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light', false);
     }
 });
 
@@ -60,7 +48,6 @@ if (menuToggle && mainNav) {
     menuToggle.addEventListener('click', () => {
         mainNav.classList.toggle('open');
     });
-
     mainNav.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             mainNav.classList.remove('open');
@@ -81,4 +68,52 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-console.log('Moto Italy - Portale caricato correttamente.');
+// ===== FETCH DATI REDDIT (con fallback) =====
+// Tenta di recuperare i dati dal JSON pubblico di Reddit.
+// Se fallisce (CORS, rate limit, deprecazione), mantiene i valori di fallback.
+async function loadRedditStats() {
+    const statMembers = document.getElementById('statMembers');
+    const statOnline = document.getElementById('statOnline');
+    const statPosts = document.getElementById('statPosts');
+
+    if (!statMembers) return; // Non siamo in homepage
+
+    const FALLBACK = {
+        members: '5.000+',
+        online: '—',
+        posts: '—'
+    };
+
+    try {
+        const response = await fetch('https://www.reddit.com/r/MotoItaly/about.json', {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Reddit API non raggiungibile');
+
+        const data = await response.json();
+        const sub = data.data;
+
+        if (sub) {
+            statMembers.textContent = sub.subscribers
+                ? sub.subscribers.toLocaleString('it-IT')
+                : FALLBACK.members;
+            statOnline.textContent = sub.active_user_count !== undefined
+                ? sub.active_user_count.toLocaleString('it-IT')
+                : FALLBACK.online;
+            statPosts.textContent = sub.accounts_active !== undefined
+                ? sub.accounts_active.toLocaleString('it-IT')
+                : FALLBACK.posts;
+        }
+    } catch (err) {
+        // Fallback silenzioso: i numeri restano quelli di default nell'HTML
+        console.info('Dati Reddit non disponibili, uso fallback statico.');
+    }
+}
+
+// Esegui al caricamento, solo in homepage
+if (document.getElementById('redditStats')) {
+    loadRedditStats();
+}
+
+console.log('Moto Italy — script principale caricato.');

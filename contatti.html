@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contatta Moto Italy per suggerimenti, collaborazioni o segnalazioni.">
+    <title>Contattaci - Moto Italy</title>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="preload" href="fonts/inter-v18-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Moto Italy" class="logo-img">
+                <span class="logo-text">Moto Italy</span>
+            </a>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+                    <span class="theme-icon theme-icon-light" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="wiki.html">Wiki Guide</a></li>
+                    <li><a href="strumenti.html">Strumenti Utili</a></li>
+                    <li><a href="bar.html">Il Bar del Motociclista</a></li>
+                    <li><a href="contatti.html">Contattaci</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> <span>Contattaci</span>
+            </nav>
+            <h1 class="page-title">Contattaci</h1>
+            <p class="page-subtitle">Hai suggerimenti, segnalazioni o vuoi collaborare? Scrivici.</p>
+
+            <div class="contact-card">
+                <form action="https://formspree.io/f/IL_TUO_ID" method="POST" class="contact-form">
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" required placeholder="Il tuo nome">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="tua@email.it">
+                    </div>
+                    <div class="form-group">
+                        <label for="oggetto">Oggetto</label>
+                        <select id="oggetto" name="oggetto" required>
+                            <option value="">— Seleziona —</option>
+                            <option value="suggerimento">Suggerimento tool</option>
+                            <option value="segnalazione">Segnalazione errore</option>
+                            <option value="collaborazione">Collaborazione</option>
+                            <option value="altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="messaggio">Messaggio</label>
+                        <textarea id="messaggio" name="messaggio" rows="6" required placeholder="Scrivi qui il tuo messaggio..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Invia messaggio</button>
+                    <p class="affiliate-disclosure">Risponderemo entro 48 ore. I tuoi dati non verranno condivisi con terzi.</p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            <p class="footer-note">Questo sito contiene link di affiliazione. Se acquisti tramite questi link, potremmo ricevere una piccola commissione senza costi aggiuntivi per te.</p>
+        </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
