@@ -108,7 +108,7 @@ function renderArticles(articles) {
                     <span>·</span>
                     <span>${article.author}</span>
                 </div>
-                <a href="articolo.html?file=${article.fileName}" class="card-link">Leggi di più →</a>
+                <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
             </article>
         `;
     }).join('');

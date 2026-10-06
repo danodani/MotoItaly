@@ -25,7 +25,8 @@ function parseFrontmatter(md) {
 
 async function loadArticle() {
     const params = new URLSearchParams(window.location.search);
-    const file = params.get('file');
+    // Compatibilità con i vecchi link che usavano il parametro "slug"
+    const file = params.get('file') || params.get('slug');
 
     if (!file) {
         document.getElementById('articleTitle').textContent = 'Articolo non trovato';
@@ -38,7 +39,7 @@ async function loadArticle() {
 
     for (const folder of ['bar', 'wiki']) {
         try {
-            const res = await fetch(`${RAW_BASE}/content/${folder}/${file}.md`);
+            const res = await fetch(`${RAW_BASE}/content/${folder}/${encodeURIComponent(file)}.md`);
             if (res.ok) {
                 raw = await res.text();
                 sourceFolder = folder;
