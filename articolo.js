@@ -107,7 +107,8 @@ async function loadArticle() {
     }
 
     // Disclaimer affiliazioni
-    if (data.affiliate_links_present === true || data.affiliate_links_present === 'true') {
+    const aff = data.affiliate_links_present;
+    if (aff === true || aff === 'true' || aff === 'yes' || aff === '1') {
         document.getElementById('affiliateDisclaimer').hidden = false;
     }
 }
