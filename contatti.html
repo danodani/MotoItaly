@@ -48,7 +48,6 @@
                     <li><a href="wiki.html">Wiki Guide</a></li>
                     <li><a href="strumenti.html">Strumenti Utili</a></li>
                     <li><a href="bar.html">Il Bar del Motociclista</a></li>
-                    <li><a href="contatti.html">Contattaci</a></li>
                 </ul>
             </nav>
         </div>
@@ -63,7 +62,9 @@
             <p class="page-subtitle">Hai suggerimenti, segnalazioni o vuoi collaborare? Scrivici.</p>
 
             <div class="contact-card">
-                <form action="https://formspree.io/f/IL_TUO_ID" method="POST" class="contact-form">
+                <form action="https://formsubmit.co/9b82082804a56581d17d74ab3d027ed1" method="POST" class="contact-form" id="contactForm">
+                    <!-- Honeypot anti-spam: i bot compilano i campi nascosti, gli umani no -->
+                    <input type="text" name="_honey" id="honeypot" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
                     <div class="form-group">
                         <label for="nome">Nome</label>
                         <input type="text" id="nome" name="nome" required placeholder="Il tuo nome">
@@ -95,6 +96,10 @@
 
     <footer class="site-footer">
         <div class="container footer-inner">
+            <nav class="footer-nav" aria-label="Link secondari">
+                <a href="chi-sono.html">Chi sono</a>
+                <a href="contatti.html">Contattaci</a>
+            </nav>
             <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
         </div>
     </footer>

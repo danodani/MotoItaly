@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Avatar motociclista">
+  <circle cx="80" cy="80" r="80" fill="#ea580c"/>
+  <g fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="45" cy="104" r="21"/>
+    <circle cx="116" cy="104" r="21"/>
+    <path d="M45 104l21-36h24l16 21"/>
+    <path d="M66 68H54"/>
+    <path d="M90 68l13-14h15"/>
+  </g>
+</svg>

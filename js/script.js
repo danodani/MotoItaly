@@ -116,4 +116,28 @@ if (document.getElementById('redditStats')) {
     loadRedditStats();
 }
 
+// ===== ANTI-SPAM MODULO CONTATTI =====
+// Due controlli lato client, da sommare al reCAPTCHA di FormSubmit e all'honeypot `_honey` nell'HTML.
+const contactForm = document.getElementById('contactForm');
+
+if (contactForm) {
+    const FORM_MIN_FILL_TIME_MS = 3000; // tempo minimo di compilazione (anti-bot)
+    const formLoadedAt = Date.now();
+
+    contactForm.addEventListener('submit', (e) => {
+        // Trappola temporale: un invio a meno di 3 secondi dal caricamento è quasi certamente un bot.
+        if (Date.now() - formLoadedAt < FORM_MIN_FILL_TIME_MS) {
+            e.preventDefault();
+            alert('Il modulo è stato inviato troppo velocemente. Attendi qualche secondo e riprova.');
+            return;
+        }
+
+        // Honeypot: se il campo nascosto è stato compilato, blocchiamo l'invio.
+        const honey = contactForm.querySelector('#honeypot');
+        if (honey && honey.value.trim() !== '') {
+            e.preventDefault();
+        }
+    });
+}
+
 console.log('Moto Italy — script principale caricato.');
