@@ -1042,6 +1042,13 @@ html[data-theme="dark"] .theme-icon-dark {
     box-shadow: var(--shadow-hover);
 }
 
+/* ===== TURNSTILE (anti-spam modulo contatti) ===== */
+.turnstile-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0 20px;
+}
+
 /* ===== RESPONSIVE AGGIUNTIVO ===== */
 @media (max-width: 768px) {
     .community-section {

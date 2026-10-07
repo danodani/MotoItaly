@@ -136,6 +136,15 @@ if (contactForm) {
         const honey = contactForm.querySelector('#honeypot');
         if (honey && honey.value.trim() !== '') {
             e.preventDefault();
+            return;
+        }
+
+        // Turnstile: il widget inietta l'input nascosto cf-turnstile-response con il token.
+        // Se il token manca (verifica non completata o fallita), blocciamo l'invio.
+        const turnstile = contactForm.querySelector('[name="cf-turnstile-response"]');
+        if (!turnstile || !turnstile.value.trim()) {
+            e.preventDefault();
+            alert('Attendi il completamento della verifica anti-spam e riprova.');
         }
     });
 }
