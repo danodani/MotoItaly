@@ -27,7 +27,7 @@ function renderCategories(articles) {
     }).join('');
 }
 
-// ===== Ultime guide pubblicate (max 5, dalla più recente) =====
+// ===== Ultime guide pubblicate in lista verticale (max 5, dalla più recente) =====
 function renderLatest(articles) {
     if (!articles.length) {
         articlesGrid.innerHTML = `
@@ -42,7 +42,7 @@ function renderLatest(articles) {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 5);
 
-    articlesGrid.innerHTML = sorted.map(wikiCardHTML).join('');
+    articlesGrid.innerHTML = sorted.map(wikiListItemHTML).join('');
 }
 
 // ===== Guide senza categoria → sezione "Altre guide" in fondo alla pagina =====
@@ -55,7 +55,7 @@ function renderAltre(articles) {
     }
     const sorted = [...uncategorized]
         .sort((a, b) => new Date(b.date) - new Date(a.date));
-    altreGrid.innerHTML = sorted.map(wikiCardHTML).join('');
+    altreGrid.innerHTML = sorted.map(wikiListItemHTML).join('');
     altreSection.hidden = false;
 }
 

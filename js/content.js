@@ -209,7 +209,33 @@ function formatDateIT(dateStr) {
     return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-// ===== Card standard di una guida wiki =====
+// ===== Voce di lista verticale per le guide wiki (titolo-link, data, estratto) =====
+function wikiListItemHTML(article) {
+    const category = WIKI_CATEGORIES.find(c => c.slug === article.categoria);
+    const icon = category ? category.icon : '📚';
+    const catLabel = category ? category.title : 'Wiki';
+
+    return `
+        <article class="wiki-list-item">
+            <div class="wiki-list-top">
+                <span class="wiki-list-icon" aria-hidden="true">${icon}</span>
+                <h3 class="wiki-list-title">
+                    <a href="articolo.html?file=${encodeURIComponent(article.fileName)}">${article.title}</a>
+                </h3>
+            </div>
+            ${article.excerpt ? `<p class="wiki-list-excerpt">${article.excerpt}</p>` : ''}
+            <div class="wiki-list-meta">
+                <span>${catLabel}</span>
+                <span>·</span>
+                <span>${formatDateIT(article.date)}</span>
+                <span>·</span>
+                <span>${article.author}</span>
+            </div>
+            <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
+        </article>`;
+}
+
+// ===== Card standard di una guida wiki (usata nella pagina di categoria) =====
 function wikiCardHTML(article) {
     const category = WIKI_CATEGORIES.find(c => c.slug === article.categoria);
     const badge = category

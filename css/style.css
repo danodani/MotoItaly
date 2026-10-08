@@ -1251,6 +1251,74 @@ a.wiki-cat-card {
     color: var(--color-text-muted);
 }
 
+/* ===== LISTE VERTICALI (Wiki: ultime guide + altre guide) ===== */
+.wiki-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.wiki-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 4px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wiki-list-item:first-child {
+    padding-top: 8px;
+}
+
+.wiki-list-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.wiki-list-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.wiki-list-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.wiki-list-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.wiki-list-title a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.wiki-list-title a:hover {
+    color: var(--color-primary);
+}
+
+.wiki-list-excerpt {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.wiki-list-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
 /* ===== DISCLAIMER AFFILIAZIONI NEL FOOTER ===== */
 .site-footer .footer-disclaimer {
     max-width: 640px;

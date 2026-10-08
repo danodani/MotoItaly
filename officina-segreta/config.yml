@@ -10,6 +10,9 @@ public_folder: "/assets/images/uploads"
 
 locale: "it"
 
+# Link "torna al sito" nell'header del CMS (STEP 6)
+display_url: "https://motoitaly.pages.dev"
+
 collections:
   # ============ IL BAR DEL MOTOCICLISTA (BLOG) ============
   - name: "bar"
@@ -23,7 +26,10 @@ collections:
     sort: "date:desc"
     fields:
       - { label: "Titolo", name: "title", widget: "string" }
-      - { label: "Slug (URL)", name: "slug", widget: "string" }
+      # STEP 5: lo slug resta modificabile ma suggerisce il titolo;
+      # Sveltia non supporta suffissi progressivi automatici (-2, -3):
+      # se il file esiste già, modificare lo slug a mano.
+      - { label: "Slug (URL)", name: "slug", widget: "string", hint: "Suggerimento: usa lo stesso testo del titolo in minuscolo, con trattini al posto degli spazi (es. la-mia-guida). Se esiste già, aggiungi -2, -3." }
       - { label: "Data di pubblicazione", name: "date", widget: "datetime" }
       - label: "Categoria"
         name: "category"
@@ -35,7 +41,10 @@ collections:
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
       - { label: "Estratto", name: "excerpt", widget: "text" }
-      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "Tag liberi, uno per riga (es. blog, test). Servono agli articoli correlati." }
+      # STEP 3: campo libero; la lista dei tag già usati è in content/tags.json
+      # (mantenuta a mano). Sveltia usa widget list: i suggerimenti automatici
+      # via relation richiederebbero una collection di tag inesistente.
+      - { label: "Tags", name: "tags", widget: "list", required: false, default: [], hint: "Premi Invio per aggiungere un tag. Tag già usati (per coerenza): vedi content/tags.json — dopo 2-3 caratteri ricontrolla di non creare duplicati." }
       - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false }
       - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }
@@ -52,7 +61,8 @@ collections:
     sort: "date:desc"
     fields:
       - { label: "Titolo", name: "title", widget: "string" }
-      - { label: "Slug (URL)", name: "slug", widget: "string" }
+      # STEP 5: vedi nota sulla collection "bar" (niente -2/-3 automatici).
+      - { label: "Slug (URL)", name: "slug", widget: "string", hint: "Suggerimento: usa lo stesso testo del titolo in minuscolo, con trattini al posto degli spazi (es. la-mia-guida). Se esiste già, aggiungi -2, -3." }
       - { label: "Data di pubblicazione", name: "date", widget: "datetime" }
       - label: "Sezione (wiki/blog)"
         name: "category"
@@ -75,7 +85,7 @@ collections:
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
       - { label: "Estratto", name: "excerpt", widget: "text" }
-      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "Tag liberi, uno per riga (es. primi-passi, casco, olio). Servono agli articoli correlati." }
+      - { label: "Tags", name: "tags", widget: "list", required: false, default: [], hint: "Premi Invio per aggiungere un tag. Tag già usati (per coerenza): vedi content/tags.json — dopo 2-3 caratteri ricontrolla di non creare duplicati. Servono agli articoli correlati." }
       - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false }
       - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }
