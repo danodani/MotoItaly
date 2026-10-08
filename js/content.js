@@ -250,25 +250,59 @@ async function fetchContentList(folder) {
 }
 
 // ===== Testo grezzo di un singolo articolo (repo privato) =====
-// Usa SEMPRE la Function API (/api/contenuti/...): il repo è privato e i file .md
-// NON vengono deployati come asset statici su Pages. La Function autentica con
-// GITHUB_TOKEN e restituisce il markdown decodificato.
+// Strategia a cascata:
+// 1) Prova asset statico /content/... (funziona se content/ è deployato come asset)
+// 2) Fallback Function API /api/contenuti/... (richiede GITHUB_TOKEN su Pages)
+// Entrambi i tentativi loggano errori in console per debug.
 async function fetchContentText(folder, fileName) {
     const encFolder = encodeURIComponent(folder);
     const encFile = encodeURIComponent(fileName);
 
+    // --- Tentativo 1: asset statico same-origin ---
     try {
-        const res = await fetch(`${CONTENT_LIST_BASE}/content/${encFolder}/${encFile}`);
-        if (!res.ok) return null;
+        const staticUrl = `${CONTENT_RAW_BASE}/${encFolder}/${encFile}`;
+        const res = await fetch(staticUrl);
+        if (res.ok) {
+            const text = await res.text();
+            // Se la risposta sembra HTML (SPA fallback di Pages), non è il markdown
+            const looksLikeHtml = text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html');
+            if (!looksLikeHtml && text.trim().length > 0) {
+                console.log('[fetchContentText] OK statico:', staticUrl);
+                return text;
+            }
+            console.warn('[fetchContentText] Statico ha restituito HTML (fallback SPA), provo Function:', staticUrl);
+        } else {
+            console.warn('[fetchContentText] Statico fallito:', res.status, staticUrl);
+        }
+    } catch (err) {
+        console.warn('[fetchContentText] Errore fetch statico:', err.message);
+    }
+
+    // --- Tentativo 2: Function API (richiede GITHUB_TOKEN su Cloudflare Pages) ---
+    try {
+        const functionUrl = `${CONTENT_LIST_BASE}/content/${encFolder}/${encFile}`;
+        const res = await fetch(functionUrl);
+        if (!res.ok) {
+            const errText = await res.text().catch(() => '');
+            console.error('[fetchContentText] Function API fallita:', res.status, functionUrl, errText);
+            return null;
+        }
         const data = await res.json();
         // La Function restituisce già il testo decodificato in data.content
-        if (typeof data.content === 'string' && data.content && data.encoding !== 'base64') return data.content;
+        if (typeof data.content === 'string' && data.content && data.encoding !== 'base64') {
+            console.log('[fetchContentText] OK Function (testo):', functionUrl);
+            return data.content;
+        }
         if (data.encoding === 'base64' && typeof data.content === 'string') {
             const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
-            return new TextDecoder().decode(bytes);
+            const decoded = new TextDecoder().decode(bytes);
+            console.log('[fetchContentText] OK Function (base64):', functionUrl);
+            return decoded;
         }
+        console.warn('[fetchContentText] Function risposta inaspettata:', data);
         return null;
     } catch (err) {
+        console.error('[fetchContentText] Errore Function API:', err.message);
         return null;
     }
 }
