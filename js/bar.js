@@ -81,7 +81,7 @@ function renderArticles(articles) {
         articlesGrid.innerHTML = `
             <div class="empty-state">
                 Il bar è aperto, ma il bancone è vuoto. 🍺<br>
-                Pubblica il primo articolo dal <a href="/admin/">pannello di amministrazione</a>.
+                Pubblica il primo articolo dal pannello di amministrazione.
             </div>`;
         return;
     }

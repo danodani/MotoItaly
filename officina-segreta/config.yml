@@ -3,7 +3,7 @@ backend:
   repo: danodani/MotoItaly
   branch: main
   base_url: https://motoitaly.pages.dev
-  auth_endpoint: /api/auth
+  auth_endpoint: /api/accesso-officina/9d4k2m
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"

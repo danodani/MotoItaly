@@ -74,7 +74,7 @@ function renderArticles(articles) {
         articlesGrid.innerHTML = `
             <div class="empty-state">
                 Nessuna guida ancora pubblicata. 📚<br>
-                Pubblica la prima guida dal <a href="/admin/">pannello di amministrazione</a>.
+                Pubblica la prima guida dal pannello di amministrazione.
             </div>`;
         return;
     }
