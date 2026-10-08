@@ -250,17 +250,12 @@ async function fetchContentList(folder) {
 }
 
 // ===== Testo grezzo di un singolo articolo (repo privato) =====
-// 1) asset statico same-origin /content/... (file .md pubblicati da Pages)
-// 2) Function single-file (decodifica server-side il base64 dell'API GitHub)
+// Usa SEMPRE la Function API (/api/contenuti/...): il repo è privato e i file .md
+// NON vengono deployati come asset statici su Pages. La Function autentica con
+// GITHUB_TOKEN e restituisce il markdown decodificato.
 async function fetchContentText(folder, fileName) {
     const encFolder = encodeURIComponent(folder);
     const encFile = encodeURIComponent(fileName);
-
-    try {
-        const res = await fetch(`${CONTENT_RAW_BASE}/${encFolder}/${encFile}`);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return await res.text();
-    } catch (err) { /* fallback Function sotto */ }
 
     try {
         const res = await fetch(`${CONTENT_LIST_BASE}/content/${encFolder}/${encFile}`);
