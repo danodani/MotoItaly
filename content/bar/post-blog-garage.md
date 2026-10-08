@@ -1,6 +1,6 @@
 ---
 title: Post blog Garage
-slug: Post blog Garage
+slug: post-blog-garage
 date: 2026-10-08T16:21:00
 category: bar
 author: u/danodani

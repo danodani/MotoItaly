@@ -22,20 +22,23 @@ function renderArticles(articles) {
         const tagClass = isWiki ? 'tag-wiki' : 'tag-bar';
         const tagLabel = isWiki ? '📚 Wiki & Normative' : '☕ Da Bar';
         const gpxBadge = article.gpx_file ? '<span class="mini-badge">🗺️ GPX</span>' : '';
+        const safeTitle = escapeHTML(article.title || '');
+        const safeExcerpt = escapeHTML(article.excerpt || '');
+        const safeAuthor = escapeHTML(article.author || '');
 
         return `
             <article class="content-card article-card">
-                ${article.featured_image ? `<img src="${article.featured_image}" alt="${article.title}" class="card-image" loading="lazy">` : ''}
+                ${article.featured_image ? `<img src="${article.featured_image}" alt="${safeTitle}" class="card-image" loading="lazy">` : ''}
                 <div class="article-card-tags">
                     <span class="card-tag ${tagClass}">${tagLabel}</span>
                     ${gpxBadge}
                 </div>
-                <h3>${article.title}</h3>
-                <p class="article-excerpt">${article.excerpt}</p>
+                <h3>${safeTitle}</h3>
+                <p class="article-excerpt">${safeExcerpt}</p>
                 <div class="article-meta">
                     <span>${formatDateIT(article.date)}</span>
                     <span>·</span>
-                    <span>${article.author}</span>
+                    <span>${safeAuthor}</span>
                 </div>
                 <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
             </article>

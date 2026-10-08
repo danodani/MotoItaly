@@ -44,7 +44,7 @@ async function renderRelated(currentTags, currentFile) {
 
         list.innerHTML = related.map(a => `
             <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="related-item">
-                <span class="related-item-title">${a.title}</span>
+                <span class="related-item-title">${escapeHTML(a.title || '')}</span>
                 <span class="related-item-meta">
                     <span>📅 ${formatDateIT(a.date)}</span>
                     <span>${a.folder === 'wiki' ? '📚 Wiki' : '☕ Bar'}</span>
@@ -129,10 +129,10 @@ async function loadArticle() {
         img.hidden = false;
     }
 
-    // Contenuto — usa marked.js
-    const htmlContent = (typeof marked !== 'undefined')
+    // Contenuto — marked.js se disponibile, altrimenti renderer interno
+    const htmlContent = (typeof marked !== 'undefined' && marked && typeof marked.parse === 'function')
         ? marked.parse(content)
-        : content.replace(/\n/g, '<br>');
+        : renderMarkdown(content);
     document.getElementById('articleBody').innerHTML = htmlContent;
 
     // GPX

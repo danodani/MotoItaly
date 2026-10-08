@@ -112,6 +112,115 @@ function parseFrontmatter(md) {
     return { data, content: match[2] };
 }
 
+// ===== Markdown → HTML (autonomo, senza dipendenze esterne) =====
+// Supporta gli elementi usati negli articoli: titoli, grassetto/corsivo,
+// codice inline e blocchi, link, immagini, liste, citazioni, paragrafi.
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function renderInlineMarkdown(text) {
+    let out = escapeHTML(text);
+    // Immagini: ![alt](src "titolo") o ![alt](src)
+    out = out.replace(/!\[([^\]]*)\]\(\s*(\S+?)(?:\s+"[^"]*")?\s*\)/g, '<img src="$2" alt="$1" loading="lazy">');
+    // Link: [testo](url)
+    out = out.replace(/\[([^\]]+)\]\(\s*(\S+?)(?:\s+"[^"]*")?\s*\)/g, '<a href="$2">$1</a>');
+    // Codice inline: `codice`
+    out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Grassetto: **testo**
+    out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Corsivo: *testo*
+    out = out.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    return out;
+}
+
+function renderMarkdown(md) {
+    const lines = (md || '').replace(/\r\n/g, '\n').split('\n');
+    let html = '';
+    let inList = false;
+    let inCode = false;
+    let para = [];
+
+    const flushPara = () => {
+        if (para.length) {
+            html += `<p>${renderInlineMarkdown(para.join(' '))}</p>`;
+            para = [];
+        }
+    };
+
+    const closeList = () => {
+        if (inList) {
+            html += '</ul>';
+            inList = false;
+        }
+    };
+
+    for (const line of lines) {
+        // Blocchi di codice ``` ... ```
+        if (/^\s*```/.test(line)) {
+            if (inCode) {
+                html += '</code></pre>';
+                inCode = false;
+            } else {
+                flushPara();
+                closeList();
+                html += '<pre><code>';
+                inCode = true;
+            }
+            continue;
+        }
+        if (inCode) {
+            html += escapeHTML(line) + '\n';
+            continue;
+        }
+
+        const heading = line.match(/^(#{1,4})\s+(.*)$/);
+        if (heading) {
+            flushPara();
+            closeList();
+            const level = heading[1].length;
+            html += `<h${level}>${renderInlineMarkdown(heading[2])}</h${level}>`;
+            continue;
+        }
+
+        const quote = line.match(/^\s*>\s?(.*)$/);
+        if (quote) {
+            flushPara();
+            closeList();
+            html += `<blockquote>${renderInlineMarkdown(quote[1] || '')}</blockquote>`;
+            continue;
+        }
+
+        const item = line.match(/^\s*[-*]\s+(.*)$/);
+        if (item) {
+            flushPara();
+            if (!inList) {
+                html += '<ul>';
+                inList = true;
+            }
+            html += `<li>${renderInlineMarkdown(item[1])}</li>`;
+            continue;
+        }
+
+        if (/^\s*$/.test(line)) {
+            flushPara();
+            closeList();
+            continue;
+        }
+
+        para.push(line.trim());
+    }
+
+    flushPara();
+    closeList();
+    if (inCode) html += '</code></pre>';
+    return html;
+}
+
 // ===== Converte il campo tags in array di stringhe =====
 function frontmatterToList(value) {
     if (Array.isArray(value)) {
@@ -214,22 +323,25 @@ function wikiListItemHTML(article) {
     const category = WIKI_CATEGORIES.find(c => c.slug === article.categoria);
     const icon = category ? category.icon : '📚';
     const catLabel = category ? category.title : 'Wiki';
+    const safeTitle = escapeHTML(article.title || '');
+    const safeExcerpt = escapeHTML(article.excerpt || '');
+    const safeAuthor = escapeHTML(article.author || '');
 
     return `
         <article class="wiki-list-item">
             <div class="wiki-list-top">
                 <span class="wiki-list-icon" aria-hidden="true">${icon}</span>
                 <h3 class="wiki-list-title">
-                    <a href="articolo.html?file=${encodeURIComponent(article.fileName)}">${article.title}</a>
+                    <a href="articolo.html?file=${encodeURIComponent(article.fileName)}">${safeTitle}</a>
                 </h3>
             </div>
-            ${article.excerpt ? `<p class="wiki-list-excerpt">${article.excerpt}</p>` : ''}
+            ${safeExcerpt ? `<p class="wiki-list-excerpt">${safeExcerpt}</p>` : ''}
             <div class="wiki-list-meta">
                 <span>${catLabel}</span>
                 <span>·</span>
                 <span>${formatDateIT(article.date)}</span>
                 <span>·</span>
-                <span>${article.author}</span>
+                <span>${safeAuthor}</span>
             </div>
             <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
         </article>`;
@@ -241,17 +353,20 @@ function wikiCardHTML(article) {
     const badge = category
         ? `<span class="card-tag tag-wiki">${category.icon} ${category.title}</span>`
         : '<span class="card-tag tag-wiki">📚 Wiki</span>';
+    const safeTitle = escapeHTML(article.title || '');
+    const safeExcerpt = escapeHTML(article.excerpt || '');
+    const safeAuthor = escapeHTML(article.author || '');
 
     return `
         <article class="content-card article-card">
-            ${article.featured_image ? `<img src="${article.featured_image}" alt="${article.title}" class="card-image" loading="lazy">` : ''}
+            ${article.featured_image ? `<img src="${article.featured_image}" alt="${safeTitle}" class="card-image" loading="lazy">` : ''}
             <div class="article-card-tags">${badge}</div>
-            <h3>${article.title}</h3>
-            <p class="article-excerpt">${article.excerpt}</p>
+            <h3>${safeTitle}</h3>
+            <p class="article-excerpt">${safeExcerpt}</p>
             <div class="article-meta">
                 <span>${formatDateIT(article.date)}</span>
                 <span>·</span>
-                <span>${article.author}</span>
+                <span>${safeAuthor}</span>
             </div>
             <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
         </article>`;

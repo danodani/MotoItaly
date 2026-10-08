@@ -1,10 +1,11 @@
 {
-  "_comment": "Registro manuale dei tag già usati (STEP 3). Sveltia CMS non suggerisce i tag in automatico: prima di creare un nuovo tag, cerca qui se ne esiste già uno equivalente e riusalo. Aggiorna questa lista quando pubblichi articoli con tag nuovi.",
+  "_comment": "Registro manuale dei tag già usati. Sveltia CMS non suggerisce i tag in automatico: prima di creare un nuovo tag, cerca qui se ne esiste già uno equivalente e riusalo. Aggiorna questa lista quando pubblichi articoli con tag nuovi.",
   "tags": [
     "primi-passi",
     "consigli",
     "blog",
     "sito-web",
-    "test"
+    "test",
+    "officina"
   ]
 }
