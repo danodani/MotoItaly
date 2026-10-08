@@ -1319,6 +1319,221 @@ a.wiki-cat-card {
     color: var(--color-text-muted);
 }
 
+/* ===== WIKI INDEX — Layout a due colonne con sidebar TOC ===== */
+.wiki-index-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.wiki-index-header {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.wiki-index-header .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 8px;
+}
+
+.wiki-index-header .page-subtitle {
+    color: var(--color-text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.wiki-index-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+/* Sidebar TOC */
+.wiki-sidebar {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 24px;
+    border-right: 1px solid var(--color-border);
+}
+
+.wiki-toc {
+    font-size: 0.85rem;
+}
+
+.wiki-toc-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wiki-toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-toc li {
+    margin: 0;
+}
+
+.wiki-toc-link {
+    display: block;
+    padding: 6px 10px;
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.wiki-toc-link:hover {
+    background: var(--color-bg-alt);
+    color: var(--color-primary);
+}
+
+.wiki-toc-link.active {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 500;
+}
+
+/* Contenuto principale */
+.wiki-main {
+    min-width: 0;
+}
+
+.wiki-category-section {
+    margin-bottom: 40px;
+}
+
+.wiki-category-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--color-primary);
+    color: var(--color-text);
+}
+
+.wiki-article-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-article-item {
+    margin: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wiki-article-item:last-child {
+    border-bottom: none;
+}
+
+.wiki-article-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 4px;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.wiki-article-link:hover {
+    color: var(--color-primary);
+}
+
+.wiki-article-title {
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.wiki-article-meta {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .wiki-index-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .wiki-sidebar {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-right: 0;
+        padding-bottom: 16px;
+    }
+
+    .wiki-toc ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .wiki-toc li {
+        flex: 0 0 auto;
+    }
+
+    .wiki-toc-link {
+        padding: 6px 12px;
+        background: var(--color-bg-alt);
+        border-radius: 999px;
+    }
+
+    .wiki-toc-link.active {
+        background: var(--color-primary);
+        color: #fff;
+    }
+
+    .wiki-toc-title {
+        display: none;
+    }
+}
+
+/* Responsive per mobile */
+@media (max-width: 600px) {
+    .wiki-index-container {
+        padding: 0 16px;
+    }
+
+    .wiki-category-title {
+        font-size: 1.15rem;
+    }
+
+    .wiki-article-link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 10px 0;
+    }
+
+    .wiki-article-meta {
+        font-size: 0.72rem;
+    }
+}
+
 /* ===== DISCLAIMER AFFILIAZIONI NEL FOOTER ===== */
 .site-footer .footer-disclaimer {
     max-width: 640px;

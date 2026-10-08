@@ -26,7 +26,7 @@
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
                     <span class="theme-icon theme-icon-light" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l-1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
                     </span>
                     <span class="theme-icon theme-icon-dark" aria-hidden="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -47,27 +47,31 @@
     </header>
 
     <main class="page-content">
-        <div class="container">
+        <div class="container wiki-index-container">
             <nav class="breadcrumb">
                 <a href="index.html">Home</a> <span>/</span> <span>Wiki Guide</span>
             </nav>
-            <h1 class="page-title">📚 Wiki Guide</h1>
-            <p class="page-subtitle">Guide pratiche, normative e consigli per ogni aspetto della vita in moto. Scegli una categoria oppure sfoglia le ultime pubblicazioni.</p>
+            <header class="wiki-index-header">
+                <h1 class="page-title">📚 Wiki Guide</h1>
+                <p class="page-subtitle">Guide pratiche, normative e consigli per ogni aspetto della vita in moto.</p>
+            </header>
 
-            <h2 class="section-heading" id="categorieHeading">Sfoglia per categoria</h2>
-            <div class="cards-grid" id="categoriesGrid" aria-labelledby="categorieHeading">
-                <div class="loading-state">Caricamento categorie...</div>
+            <div class="wiki-index-layout">
+                <!-- Sidebar categorie (segnalibri) -->
+                <aside class="wiki-sidebar" id="wikiSidebar" aria-label="Categorie Wiki">
+                    <nav class="wiki-toc" id="wikiToc">
+                        <span class="wiki-toc-title">In questa pagina</span>
+                        <ul id="wikiTocList"></ul>
+                    </nav>
+                </aside>
+
+                <!-- Contenuto principale: articoli per categoria -->
+                <section class="wiki-main" id="wikiMain" aria-labelledby="wikiMainTitle">
+                    <div id="wikiCategoriesContent">
+                        <div class="loading-state">Caricamento guide...</div>
+                    </div>
+                </section>
             </div>
-
-            <h2 class="section-heading" id="ultimeHeading">Ultime guide pubblicate</h2>
-            <div class="wiki-list" id="articlesGrid" aria-labelledby="ultimeHeading">
-                <div class="loading-state">Caricamento guide...</div>
-            </div>
-
-            <section id="altreSection" hidden aria-labelledby="altreHeading">
-                <h2 class="section-heading" id="altreHeading">Altre guide</h2>
-                <div class="wiki-list" id="altreGrid"></div>
-            </section>
         </div>
     </main>
 

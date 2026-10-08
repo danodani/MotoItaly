@@ -1,36 +1,14 @@
 // ============================================================
-// WIKI — pagina indice: categorie + ultime guide pubblicate
+// WIKI — pagina indice: indice per categoria (stile wiki)
 // ============================================================
 
-const categoriesGrid = document.getElementById('categoriesGrid');
-const articlesGrid = document.getElementById('articlesGrid');
-const altreSection = document.getElementById('altreSection');
-const altreGrid = document.getElementById('altreGrid');
+const wikiCategoriesContent = document.getElementById('wikiCategoriesContent');
+const wikiTocList = document.getElementById('wikiTocList');
 
-// ===== Griglia delle categorie (le conteglio vengono dagli articoli) =====
-function renderCategories(articles) {
-    categoriesGrid.innerHTML = WIKI_CATEGORIES.map(cat => {
-        const count = articles
-            ? articles.filter(a => a.categoria === cat.slug).length
-            : null;
-        const countLabel = count === null
-            ? '–'
-            : `${count} ${count === 1 ? 'guida' : 'guide'}`;
-
-        return `
-            <a href="wiki-categoria.html?cat=${encodeURIComponent(cat.slug)}" class="content-card wiki-cat-card">
-                <span class="wiki-cat-icon" aria-hidden="true">${cat.icon}</span>
-                <h3>${cat.title}</h3>
-                <p>${cat.description}</p>
-                <span class="wiki-cat-count">${countLabel}</span>
-            </a>`;
-    }).join('');
-}
-
-// ===== Ultime guide pubblicate in lista verticale (max 5, dalla più recente) =====
-function renderLatest(articles) {
+// ===== Renderizza l'indice completo per categoria =====
+function renderWikiIndex(articles) {
     if (!articles.length) {
-        articlesGrid.innerHTML = `
+        wikiCategoriesContent.innerHTML = `
             <div class="empty-state">
                 Nessuna guida ancora pubblicata. 📚<br>
                 Pubblica la prima guida dal pannello di amministrazione.
@@ -38,40 +16,87 @@ function renderLatest(articles) {
         return;
     }
 
-    const sorted = [...articles]
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 5);
+    // Raggruppa articoli per categoria
+    const byCategory = {};
+    articles.forEach(a => {
+        const cat = a.categoria || 'uncategorized';
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push(a);
+    });
 
-    articlesGrid.innerHTML = sorted.map(wikiListItemHTML).join('');
+    // Ordina categorie secondo WIKI_CATEGORIES, poi uncategorized
+    const categoryOrder = [...WIKI_CATEGORIES.map(c => c.slug), 'uncategorized'];
+
+    let html = '';
+    let tocHtml = '';
+
+    categoryOrder.forEach((catSlug, idx) => {
+        const catArticles = byCategory[catSlug];
+        if (!catArticles || !catArticles.length) return;
+
+        const catInfo = WIKI_CATEGORIES.find(c => c.slug === catSlug);
+        const catTitle = catInfo ? `${catInfo.icon} ${catInfo.title}` : '📁 Altre guide';
+        const catId = `cat-${catSlug}`;
+
+        // Ordina articoli per data decrescente
+        const sorted = [...catArticles].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Voce TOC
+        tocHtml += `<li><a href="#${catId}" class="wiki-toc-link">${catTitle}</a></li>`;
+
+        // Sezione categoria
+        html += `
+            <section class="wiki-category-section" id="${catId}" aria-labelledby="${catId}-title">
+                <h2 class="wiki-category-title" id="${catId}-title">${catTitle}</h2>
+                <ul class="wiki-article-list">
+                    ${sorted.map(a => `
+                        <li class="wiki-article-item">
+                            <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="wiki-article-link">
+                                <span class="wiki-article-title">${a.title}</span>
+                                <span class="wiki-article-meta">${formatDateIT(a.date)}</span>
+                            </a>
+                        </li>
+                    `).join('')}
+                </ul>
+            </section>`;
+    });
+
+    wikiCategoriesContent.innerHTML = html;
+    wikiTocList.innerHTML = tocHtml;
+
+    // Scroll spy per evidenziare sezione attiva nel TOC
+    if (tocHtml) setupTocSpy();
 }
 
-// ===== Guide senza categoria → sezione "Altre guide" in fondo alla pagina =====
-function renderAltre(articles) {
-    if (!altreSection || !altreGrid) return;
-    const uncategorized = articles.filter(a => !WIKI_CATEGORIES.some(c => c.slug === a.categoria));
-    if (!uncategorized.length) {
-        altreSection.hidden = true;
-        return;
-    }
-    const sorted = [...uncategorized]
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-    altreGrid.innerHTML = sorted.map(wikiListItemHTML).join('');
-    altreSection.hidden = false;
+// ===== Scroll spy per TOC (evidenzia categoria visibile) =====
+function setupTocSpy() {
+    const tocLinks = wikiTocList.querySelectorAll('.wiki-toc-link');
+    const sections = document.querySelectorAll('.wiki-category-section');
+    if (!tocLinks.length || !sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                tocLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(sec => observer.observe(sec));
 }
 
 async function init() {
-    categoriesGrid.innerHTML = '<div class="loading-state">Caricamento categorie...</div>';
-    articlesGrid.innerHTML = '<div class="loading-state">Caricamento guide...</div>';
+    wikiCategoriesContent.innerHTML = '<div class="loading-state">Caricamento guide...</div>';
 
     try {
         const articles = await fetchFolderArticles('wiki');
-        renderCategories(articles);
-        renderLatest(articles);
-        renderAltre(articles);
+        renderWikiIndex(articles);
     } catch (err) {
         console.error('Impossibile caricare le guide:', err);
-        renderCategories(null);
-        articlesGrid.innerHTML = `
+        wikiCategoriesContent.innerHTML = `
             <div class="empty-state">
                 ⚠️ Al momento non riesco a caricare le guide.<br>
                 Riprova tra qualche istante.
@@ -81,4 +106,4 @@ async function init() {
 
 init();
 
-console.log('Wiki — categorie e ultime guide caricate.');
+console.log('Wiki — indice per categoria caricato.');
