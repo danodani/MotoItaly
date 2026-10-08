@@ -4,6 +4,8 @@
 
 const categoriesGrid = document.getElementById('categoriesGrid');
 const articlesGrid = document.getElementById('articlesGrid');
+const altreSection = document.getElementById('altreSection');
+const altreGrid = document.getElementById('altreGrid');
 
 // ===== Griglia delle categorie (le conteglio vengono dagli articoli) =====
 function renderCategories(articles) {
@@ -43,6 +45,20 @@ function renderLatest(articles) {
     articlesGrid.innerHTML = sorted.map(wikiCardHTML).join('');
 }
 
+// ===== Guide senza categoria → sezione "Altre guide" in fondo alla pagina =====
+function renderAltre(articles) {
+    if (!altreSection || !altreGrid) return;
+    const uncategorized = articles.filter(a => !WIKI_CATEGORIES.some(c => c.slug === a.categoria));
+    if (!uncategorized.length) {
+        altreSection.hidden = true;
+        return;
+    }
+    const sorted = [...uncategorized]
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    altreGrid.innerHTML = sorted.map(wikiCardHTML).join('');
+    altreSection.hidden = false;
+}
+
 async function init() {
     categoriesGrid.innerHTML = '<div class="loading-state">Caricamento categorie...</div>';
     articlesGrid.innerHTML = '<div class="loading-state">Caricamento guide...</div>';
@@ -51,6 +67,7 @@ async function init() {
         const articles = await fetchFolderArticles('wiki');
         renderCategories(articles);
         renderLatest(articles);
+        renderAltre(articles);
     } catch (err) {
         console.error('Impossibile caricare le guide:', err);
         renderCategories(null);

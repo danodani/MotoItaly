@@ -1,6 +1,6 @@
 ---
 title: Cose utili da sapere per chi inizia ad andare in moto
-slug: Cose utili da sapere per chi inizia ad andare in moto
+slug: cose-utili-da-sapere-per-chi-inizia-ad-andare-in-moto
 date: 2026-10-07T11:27:00
 category: wiki
 categoria: neofiti

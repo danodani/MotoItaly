@@ -3,25 +3,44 @@
 // ============================================================
 
 // ===== Articoli correlati (stesso tag, wiki + bar, max 5) =====
+// Se l'articolo non ha tag (o nessuno condivide i tag), ripiega sugli
+// ultimi 5 pubblicati tra wiki + bar, dal più nuovo al più vecchio.
 async function renderRelated(currentTags, currentFile) {
-    const tags = frontmatterToList(currentTags).map(t => t.toLowerCase());
-    if (!tags.length) return;
-
     const section = document.getElementById('relatedArticles');
     const list = document.getElementById('relatedList');
     if (!section || !list) return;
 
+    const tags = frontmatterToList(currentTags).map(t => t.toLowerCase());
+
+    let all = [];
     try {
-        const perFolder = await Promise.all(CONTENT_FOLDERS.map(f => fetchFolderArticles(f)));
-        const all = perFolder.flat();
+        // catch per-cartella: se una cartella non si elenca, usa l'altra
+        const perFolder = await Promise.all(
+            CONTENT_FOLDERS.map(f => fetchFolderArticles(f).catch(err => {
+                console.warn('Cartella non disponibile per correlati:', f, err);
+                return [];
+            }))
+        );
+        all = perFolder.flat();
+    } catch (err) {
+        console.error('Articoli correlati non disponibili:', err);
+        return;
+    }
 
-        const related = all
-            .filter(a => a.fileName !== currentFile)
-            .filter(a => a.tags.some(t => tags.includes(t.toLowerCase())))
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .slice(0, 5);
+    const candidates = all.filter(a => a.fileName !== currentFile);
+    const byDateDesc = [...candidates].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        if (!related.length) return;
+    let related;
+    if (tags.length) {
+        related = byDateDesc.filter(a => a.tags.some(t => tags.includes(t.toLowerCase())));
+        // Nessuna condivisione di tag → ultimi pubblicati
+        if (!related.length) related = byDateDesc;
+    } else {
+        related = byDateDesc;
+    }
+    related = related.slice(0, 5);
+
+    if (!related.length) return;
 
         list.innerHTML = related.map(a => `
             <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="related-item">
@@ -33,9 +52,6 @@ async function renderRelated(currentTags, currentFile) {
             </a>`).join('');
 
         section.hidden = false;
-    } catch (err) {
-        console.error('Articoli correlati non disponibili:', err);
-    }
 }
 
 async function loadArticle() {

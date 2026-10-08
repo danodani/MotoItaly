@@ -1,6 +1,6 @@
 ---
 title: Come ho creato questo Blog?
-slug: come ho creato il blog
+slug: come-ho-creato-questo-blog
 date: 2026-10-07T11:26:00
 category: bar
 author: Redazione Moto Italy

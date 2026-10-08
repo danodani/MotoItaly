@@ -117,19 +117,70 @@ function frontmatterToList(value) {
     return [];
 }
 
-// ===== Elenco dei file .md di una cartella (via Function) =====
+// Repo e branch (stessi di officina-segreta/config.yml) per i fallback pubblici
+const CONTENT_REPO = 'danodani/MotoItaly';
+const CONTENT_BRANCH = 'main';
+
+// ===== Elenco dei file .md di una cartella =====
+// 1) Function /api/contenuti (necessaria se il repo è privato: usa GITHUB_TOKEN
+//    server-side su Cloudflare Pages).
+// 2) API GitHub pubblica (funziona anche in locale con Live Server se il repo
+//    è pubblico, senza Functions).
 async function fetchContentList(folder) {
-    const res = await fetch(`${CONTENT_LIST_BASE}/content/${encodeURIComponent(folder)}`);
-    if (!res.ok) throw new Error('Elenco contenuti non disponibile (' + res.status + ')');
-    const files = await res.json();
-    if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
-    return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
+    const path = `content/${encodeURIComponent(folder)}`;
+
+    try {
+        const res = await fetch(`${CONTENT_LIST_BASE}/${path}`);
+        if (!res.ok) throw new Error('Function: HTTP ' + res.status);
+        const files = await res.json();
+        if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
+        return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
+    } catch (err) {
+        console.warn('Elenco via Function non disponibile, provo API GitHub pubblica:', err);
+    }
+
+    try {
+        const res = await fetch(`https://api.github.com/repos/${CONTENT_REPO}/contents/content/${encodeURIComponent(folder)}?ref=${CONTENT_BRANCH}`);
+        if (!res.ok) throw new Error('GitHub API: HTTP ' + res.status);
+        const files = await res.json();
+        if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
+        return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
+    } catch (err) {
+        console.error('Elenco contenuti non disponibile. Se il repo è privato, configura GITHUB_TOKEN su Cloudflare Pages → Settings → Environment variables.', err);
+        throw new Error('Elenco contenuti non disponibile (Function e API GitHub non raggiungibili)');
+    }
 }
 
-// ===== Testo grezzo di un singolo articolo (asset statico) =====
+// ===== Testo grezzo di un singolo articolo =====
+// 1) asset statico same-origin /content/... (funziona live e in locale, nessun
+//    token: i .md committati vengono pubblicati da Pages come file statici).
+// 2) Function single-file (decodifica server-side il base64 dell'API GitHub).
+// 3) raw.githubusercontent.com (solo se il repo è pubblico).
 async function fetchContentText(folder, fileName) {
+    const encFolder = encodeURIComponent(folder);
+    const encFile = encodeURIComponent(fileName);
+
     try {
-        const res = await fetch(`${CONTENT_RAW_BASE}/${encodeURIComponent(folder)}/${encodeURIComponent(fileName)}`);
+        const res = await fetch(`${CONTENT_RAW_BASE}/${encFolder}/${encFile}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.text();
+    } catch (err) { /* fallback sotto */ }
+
+    try {
+        const res = await fetch(`${CONTENT_LIST_BASE}/content/${encFolder}/${encFile}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        // La Function restituisce già il testo decodificato in data.content
+        if (typeof data.content === 'string' && data.content && data.encoding !== 'base64') return data.content;
+        if (data.encoding === 'base64' && typeof data.content === 'string') {
+            const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        }
+        throw new Error('Contenuto non valido');
+    } catch (err) { /* fallback sotto */ }
+
+    try {
+        const res = await fetch(`https://raw.githubusercontent.com/${CONTENT_REPO}/${CONTENT_BRANCH}/content/${encFolder}/${encFile}`);
         if (!res.ok) return null;
         return await res.text();
     } catch (err) {
