@@ -1,9 +1,15 @@
 // ============================================================
 // CONTENUTI — utilità condivise per leggere gli articoli
 // ------------------------------------------------------------
-// - Elenco file  → Function /api/contenuti (repo privato:
-//                   serve GITHUB_TOKEN su Cloudflare Pages)
-// - Testo        → asset statici same-origin /content/...
+// Repo PRIVATO: tutta la lettura GitHub passa dalla Function
+// /api/contenuti (usa GITHUB_TOKEN server-side su Pages).
+// - Elenco file  → Function /api/contenuti/content/<cartella>
+// - Testo        → 1) asset statico same-origin /content/... (i .md
+//                   committati sono pubblicati da Pages come file
+//                   statici, quindi leggibili senza token)
+//                 → 2) Function single-file /api/contenuti/content/...
+// Niente api.github.com né raw.githubusercontent.com lato browser:
+// con repo privato risponderebbero 404 senza token.
 // Usato da wiki.js, wiki-categoria.js, bar.js e articolo.js.
 // ============================================================
 
@@ -117,45 +123,26 @@ function frontmatterToList(value) {
     return [];
 }
 
-// Repo e branch (stessi di officina-segreta/config.yml) per i fallback pubblici
-const CONTENT_REPO = 'danodani/MotoItaly';
-const CONTENT_BRANCH = 'main';
-
-// ===== Elenco dei file .md di una cartella =====
-// 1) Function /api/contenuti (necessaria se il repo è privato: usa GITHUB_TOKEN
-//    server-side su Cloudflare Pages).
-// 2) API GitHub pubblica (funziona anche in locale con Live Server se il repo
-//    è pubblico, senza Functions).
+// ===== Elenco dei file .md di una cartella (solo via Function: repo privato) =====
 async function fetchContentList(folder) {
     const path = `content/${encodeURIComponent(folder)}`;
-
-    try {
-        const res = await fetch(`${CONTENT_LIST_BASE}/${path}`);
-        if (!res.ok) throw new Error('Function: HTTP ' + res.status);
-        const files = await res.json();
-        if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
-        return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
-    } catch (err) {
-        console.warn('Elenco via Function non disponibile, provo API GitHub pubblica:', err);
+    const res = await fetch(`${CONTENT_LIST_BASE}/${path}`);
+    if (!res.ok) {
+        let hint = '';
+        try {
+            const body = await res.json();
+            if (body && body.message) hint = ' — ' + body.message;
+        } catch (err) { /* ignora: usa solo lo status */ }
+        throw new Error('Elenco contenuti non disponibile (HTTP ' + res.status + ')' + hint);
     }
-
-    try {
-        const res = await fetch(`https://api.github.com/repos/${CONTENT_REPO}/contents/content/${encodeURIComponent(folder)}?ref=${CONTENT_BRANCH}`);
-        if (!res.ok) throw new Error('GitHub API: HTTP ' + res.status);
-        const files = await res.json();
-        if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
-        return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
-    } catch (err) {
-        console.error('Elenco contenuti non disponibile. Se il repo è privato, configura GITHUB_TOKEN su Cloudflare Pages → Settings → Environment variables.', err);
-        throw new Error('Elenco contenuti non disponibile (Function e API GitHub non raggiungibili)');
-    }
+    const files = await res.json();
+    if (!Array.isArray(files)) throw new Error('Risposta elenco non valida');
+    return files.filter(f => f.type === 'file' && typeof f.name === 'string' && f.name.endsWith('.md'));
 }
 
-// ===== Testo grezzo di un singolo articolo =====
-// 1) asset statico same-origin /content/... (funziona live e in locale, nessun
-//    token: i .md committati vengono pubblicati da Pages come file statici).
-// 2) Function single-file (decodifica server-side il base64 dell'API GitHub).
-// 3) raw.githubusercontent.com (solo se il repo è pubblico).
+// ===== Testo grezzo di un singolo articolo (repo privato) =====
+// 1) asset statico same-origin /content/... (file .md pubblicati da Pages)
+// 2) Function single-file (decodifica server-side il base64 dell'API GitHub)
 async function fetchContentText(folder, fileName) {
     const encFolder = encodeURIComponent(folder);
     const encFile = encodeURIComponent(fileName);
@@ -164,11 +151,11 @@ async function fetchContentText(folder, fileName) {
         const res = await fetch(`${CONTENT_RAW_BASE}/${encFolder}/${encFile}`);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return await res.text();
-    } catch (err) { /* fallback sotto */ }
+    } catch (err) { /* fallback Function sotto */ }
 
     try {
         const res = await fetch(`${CONTENT_LIST_BASE}/content/${encFolder}/${encFile}`);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
+        if (!res.ok) return null;
         const data = await res.json();
         // La Function restituisce già il testo decodificato in data.content
         if (typeof data.content === 'string' && data.content && data.encoding !== 'base64') return data.content;
@@ -176,13 +163,7 @@ async function fetchContentText(folder, fileName) {
             const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
             return new TextDecoder().decode(bytes);
         }
-        throw new Error('Contenuto non valido');
-    } catch (err) { /* fallback sotto */ }
-
-    try {
-        const res = await fetch(`https://raw.githubusercontent.com/${CONTENT_REPO}/${CONTENT_BRANCH}/content/${encFolder}/${encFile}`);
-        if (!res.ok) return null;
-        return await res.text();
+        return null;
     } catch (err) {
         return null;
     }

@@ -56,15 +56,22 @@ export async function onRequest(context) {
         return jsonResponse({ message: 'Not Found' }, 404);
     }
 
+    // Il repo è privato: serve sempre GITHUB_TOKEN (Fine-grained PAT
+    // Contents: Read-only su danodani/MotoItaly, impostato su Pages →
+    // Settings → Environment variables per Production e Preview).
+    if (!env.GITHUB_TOKEN) {
+        return jsonResponse({
+            message: 'GITHUB_TOKEN mancante: configura la variabile su Cloudflare Pages → Settings → Environment variables (Production e Preview).',
+        }, 503);
+    }
+
     const githubUrl = `https://api.github.com/repos/${REPO}/contents/${segments.join('/')}?ref=${BRANCH}`;
     const headers = {
         'Accept': 'application/vnd.github+json',
         'User-Agent': 'MotoItaly-Pages',
         'X-GitHub-Api-Version': '2022-11-28',
+        'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
     };
-    if (env.GITHUB_TOKEN) {
-        headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
-    }
 
     let res;
     try {
@@ -73,11 +80,23 @@ export async function onRequest(context) {
         return jsonResponse({ message: 'Errore di rete verso GitHub' }, 502);
     }
 
-    // 404 senza token: quasi certamente repo privato + GITHUB_TOKEN mancante
-    if (res.status === 404 && !env.GITHUB_TOKEN) {
+    // Errori espliciti per diagnosi rapida (verifica: /api/contenuti/content/wiki)
+    if (res.status === 401) {
         return jsonResponse({
-            message: 'Repository privato: configura GITHUB_TOKEN in Cloudflare Pages → Settings → Environment variables.',
-        }, 503);
+            message: 'GitHub 401: GITHUB_TOKEN non valido o scaduto. Rigenera il Fine-grained PAT (Contents: Read-only) e aggiornalo su Pages.',
+        }, 401);
+    }
+
+    if (res.status === 403) {
+        return jsonResponse({
+            message: 'GitHub 403: token senza permessi o rate limit esaurito. Verifica Contents: Read-only sul repo danodani/MotoItaly.',
+        }, 403);
+    }
+
+    if (res.status === 404) {
+        return jsonResponse({
+            message: 'GitHub 404: percorso non trovato o repo non accessibile al token. Verifica path content/... e permessi del PAT.',
+        }, 404);
     }
 
     if (!res.ok) {
