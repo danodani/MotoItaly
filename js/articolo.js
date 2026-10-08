@@ -61,6 +61,68 @@ async function renderRelated(currentTags, currentFile, sourceFolder) {
     section.hidden = false;
 }
 
+// ===== Altre guide wiki: stessa categoria dell'articolo corrente =====
+// Solo per articoli wiki. Esclude l'articolo corrente. Se la categoria
+// ha un solo articolo, pesca dalle altre categorie wiki.
+async function renderWikiSameCategory(currentCategoria, currentFile) {
+    const section = document.getElementById('wikiSameCategory');
+    const list = document.getElementById('wikiSameCategoryList');
+    const heading = document.getElementById('wikiSameCategoryHeading');
+    if (!section || !list) return;
+
+    const catSlug = (currentCategoria || '').toString().trim().toLowerCase();
+    // fileName da fetchFolderArticles include già ".md"; file qui è senza estensione
+    const currentName = currentFile.toString().replace(/\.md$/, '').toLowerCase();
+
+    let wikis = [];
+    try {
+        wikis = await fetchFolderArticles('wiki').catch(err => {
+            console.warn('Cartella wiki non disponibile:', err);
+            return [];
+        });
+    } catch (err) {
+        console.error('Guide wiki non disponibili:', err);
+        return;
+    }
+
+    // Escludi l'articolo corrente (confronto senza estensione, case-insensitive)
+    const others = wikis.filter(
+        a => (a.fileName || '').replace(/\.md$/, '').toLowerCase() !== currentName
+    );
+
+    // Prima le wiki della stessa categoria, poi le altre categorie
+    const byDateDesc = arr => [...arr].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const sameCategory = byDateDesc(others.filter(
+        a => (a.categoria || '').toLowerCase() === catSlug && catSlug
+    ));
+    const otherCategories = byDateDesc(others.filter(
+        a => (a.categoria || '').toLowerCase() !== catSlug || !catSlug
+    ));
+
+    const guides = [...sameCategory, ...otherCategories].slice(0, 5);
+
+    if (!guides.length) return;
+
+    // Heading dinamico con il nome della categoria
+    if (heading) {
+        const catInfo = WIKI_CATEGORIES.find(c => c.slug === catSlug);
+        heading.textContent = catInfo
+            ? `${catInfo.icon} Altre guide: ${catInfo.title}`
+            : '📚 Altre guide della Wiki';
+    }
+
+    // Formato lista/indice (stesse classi della pagina wiki.html)
+    list.innerHTML = guides.map(a => `
+        <li class="wiki-article-item">
+            <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="wiki-article-link">
+                <span class="wiki-article-title">${escapeHTML(a.title || '')}</span>
+                <span class="wiki-article-meta">${formatDateIT(a.date)}</span>
+            </a>
+        </li>`).join('');
+
+    section.hidden = false;
+}
+
 async function loadArticle() {
     const params = new URLSearchParams(window.location.search);
     // Compatibilità con i vecchi link che usavano il parametro "slug"
@@ -156,6 +218,11 @@ async function loadArticle() {
 
     // Articoli correlati per tag (solo Bar)
     renderRelated(data.tags || [], file, sourceFolder);
+
+    // Altre guide wiki della stessa categoria (solo per articoli wiki)
+    if (isWiki) {
+        renderWikiSameCategory(data.categoria || '', file);
+    }
 }
 
 loadArticle();
