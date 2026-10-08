@@ -6,6 +6,9 @@ category: bar
 author: Redazione Moto Italy
 featured_image: ''
 excerpt: E io ancora non lo so come lo ho creato, ma leggi per saperne di più!
+tags:
+  - blog
+  - sito-web
 affiliate_links_present: true
 gpx_file: ''
 ---

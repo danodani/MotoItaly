@@ -1,51 +1,66 @@
 // ============================================================
-// TEMPLATE ARTICOLO — Carica e renderizza un singolo .md
+// TEMPLATE ARTICOLO — Carica un singolo .md + correlati per tag
 // ============================================================
 
-const REPO = 'danodani/MotoItaly';
-const BRANCH = 'main';
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+// ===== Articoli correlati (stesso tag, wiki + bar, max 5) =====
+async function renderRelated(currentTags, currentFile) {
+    const tags = frontmatterToList(currentTags).map(t => t.toLowerCase());
+    if (!tags.length) return;
 
-function parseFrontmatter(md) {
-    const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
-    if (!match) return { data: {}, content: md };
-    const data = {};
-    match[1].split('\n').forEach(line => {
-        const idx = line.indexOf(':');
-        if (idx === -1) return;
-        const key = line.slice(0, idx).trim();
-        let value = line.slice(idx + 1).trim();
-        value = value.replace(/^["']|["']$/g, '');
-        if (value === 'true') value = true;
-        else if (value === 'false') value = false;
-        data[key] = value;
-    });
-    return { data, content: match[2] };
+    const section = document.getElementById('relatedArticles');
+    const list = document.getElementById('relatedList');
+    if (!section || !list) return;
+
+    try {
+        const perFolder = await Promise.all(CONTENT_FOLDERS.map(f => fetchFolderArticles(f)));
+        const all = perFolder.flat();
+
+        const related = all
+            .filter(a => a.fileName !== currentFile)
+            .filter(a => a.tags.some(t => tags.includes(t.toLowerCase())))
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 5);
+
+        if (!related.length) return;
+
+        list.innerHTML = related.map(a => `
+            <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="related-item">
+                <span class="related-item-title">${a.title}</span>
+                <span class="related-item-meta">
+                    <span>📅 ${formatDateIT(a.date)}</span>
+                    <span>${a.folder === 'wiki' ? '📚 Wiki' : '☕ Bar'}</span>
+                </span>
+            </a>`).join('');
+
+        section.hidden = false;
+    } catch (err) {
+        console.error('Articoli correlati non disponibili:', err);
+    }
 }
 
 async function loadArticle() {
     const params = new URLSearchParams(window.location.search);
     // Compatibilità con i vecchi link che usavano il parametro "slug"
-    const file = params.get('file') || params.get('slug');
+    const requested = params.get('file') || params.get('slug');
 
-    if (!file) {
+    if (!requested) {
         document.getElementById('articleTitle').textContent = 'Articolo non trovato';
         document.getElementById('articleBody').innerHTML = '<p>Nessun file specificato.</p>';
         return;
     }
 
+    const file = requested.replace(/\.md$/, '');
+
     let raw = null;
     let sourceFolder = 'bar';
 
-    for (const folder of ['bar', 'wiki']) {
-        try {
-            const res = await fetch(`${RAW_BASE}/content/${folder}/${encodeURIComponent(file)}.md`);
-            if (res.ok) {
-                raw = await res.text();
-                sourceFolder = folder;
-                break;
-            }
-        } catch (e) { /* continua */ }
+    for (const folder of CONTENT_FOLDERS) {
+        const text = await fetchContentText(folder, `${file}.md`);
+        if (text) {
+            raw = text;
+            sourceFolder = folder;
+            break;
+        }
     }
 
     if (!raw) {
@@ -66,9 +81,12 @@ async function loadArticle() {
     document.getElementById('breadcrumbTitle').textContent =
         data.title && data.title.length > 40 ? data.title.slice(0, 40) + '…' : (data.title || 'Articolo');
 
-    // Categoria
+    // Categoria (per la wiki usa la categoria tematica se presente)
     const catEl = document.getElementById('articleCategory');
-    catEl.textContent = isWiki ? '📚 Wiki & Normative' : '☕ Da Bar';
+    const wikiCat = isWiki ? WIKI_CATEGORIES.find(c => c.slug === data.categoria) : null;
+    catEl.textContent = wikiCat
+        ? `${wikiCat.icon} ${wikiCat.title}`
+        : (isWiki ? '📚 Wiki & Normative' : '☕ Da Bar');
     catEl.className = `article-category ${isWiki ? 'cat-wiki' : 'cat-blog'}`;
 
     // Titolo
@@ -112,6 +130,9 @@ async function loadArticle() {
     if (aff === true || aff === 'true' || aff === 'yes' || aff === '1') {
         document.getElementById('affiliateDisclaimer').hidden = false;
     }
+
+    // Articoli correlati per tag
+    renderRelated(data.tags || [], file);
 }
 
 loadArticle();

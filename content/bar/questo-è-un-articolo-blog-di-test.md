@@ -6,6 +6,9 @@ category: bar
 author: danodani
 featured_image: ''
 excerpt: Se io scrivo un po' di strunzate
+tags:
+  - blog
+  - test
 affiliate_links_present: false
 gpx_file: ''
 ---

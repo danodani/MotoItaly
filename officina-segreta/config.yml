@@ -35,6 +35,7 @@ collections:
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
       - { label: "Estratto", name: "excerpt", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "Tag liberi, uno per riga (es. blog, test). Servono agli articoli correlati." }
       - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false }
       - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }
@@ -53,16 +54,28 @@ collections:
       - { label: "Titolo", name: "title", widget: "string" }
       - { label: "Slug (URL)", name: "slug", widget: "string" }
       - { label: "Data di pubblicazione", name: "date", widget: "datetime" }
-      - label: "Categoria"
+      - label: "Sezione (wiki/blog)"
         name: "category"
         widget: "select"
         options:
           - { label: "Wiki / Normative", value: "wiki" }
           - { label: "Blog / Da Bar", value: "bar" }
         default: "wiki"
+      - label: "Categoria"
+        name: "categoria"
+        widget: "select"
+        default: "neofiti"
+        options:
+          - { label: "📖 Guide per Neofiti", value: "neofiti" }
+          - { label: "🔧 Manutenzione e Riparazioni", value: "manutenzione" }
+          - { label: "📜 Normative e Burocrazia", value: "normative" }
+          - { label: "🛡️ Sicurezza e Abbigliamento", value: "sicurezza" }
+          - { label: "🗺️ Viaggi e Itinerari", value: "viaggi" }
+          - { label: "❓ FAQ", value: "faq" }
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
       - { label: "Immagine di copertina", name: "featured_image", widget: "image", required: false }
       - { label: "Estratto", name: "excerpt", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "Tag liberi, uno per riga (es. primi-passi, casco, olio). Servono agli articoli correlati." }
       - { label: "Contiene link di affiliazione?", name: "affiliate_links_present", widget: "boolean", default: false }
       - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }

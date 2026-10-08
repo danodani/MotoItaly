@@ -1,75 +1,32 @@
 // ============================================================
-// WIKI — Carica guide da GitHub
+// WIKI — pagina indice: categorie + ultime guide pubblicate
 // ============================================================
 
-const REPO = 'danodani/MotoItaly';
-const BRANCH = 'main';
-const FOLDER = 'content/wiki';           // Cartella della Wiki
-const API_LIST = `https://api.github.com/repos/${REPO}/contents/${FOLDER}?ref=${BRANCH}`;
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${FOLDER}`;
-
+const categoriesGrid = document.getElementById('categoriesGrid');
 const articlesGrid = document.getElementById('articlesGrid');
 
-function parseFrontmatter(md) {
-    const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
-    if (!match) return { data: {}, content: md };
-    const data = {};
-    match[1].split('\n').forEach(line => {
-        const idx = line.indexOf(':');
-        if (idx === -1) return;
-        const key = line.slice(0, idx).trim();
-        let value = line.slice(idx + 1).trim();
-        value = value.replace(/^["']|["']$/g, '');
-        if (value === 'true') value = true;
-        else if (value === 'false') value = false;
-        data[key] = value;
-    });
-    return { data, content: match[2] };
+// ===== Griglia delle categorie (le conteglio vengono dagli articoli) =====
+function renderCategories(articles) {
+    categoriesGrid.innerHTML = WIKI_CATEGORIES.map(cat => {
+        const count = articles
+            ? articles.filter(a => a.categoria === cat.slug).length
+            : null;
+        const countLabel = count === null
+            ? '–'
+            : `${count} ${count === 1 ? 'guida' : 'guide'}`;
+
+        return `
+            <a href="wiki-categoria.html?cat=${encodeURIComponent(cat.slug)}" class="content-card wiki-cat-card">
+                <span class="wiki-cat-icon" aria-hidden="true">${cat.icon}</span>
+                <h3>${cat.title}</h3>
+                <p>${cat.description}</p>
+                <span class="wiki-cat-count">${countLabel}</span>
+            </a>`;
+    }).join('');
 }
 
-async function fetchArticleList() {
-    try {
-        const res = await fetch(API_LIST);
-        if (!res.ok) throw new Error('Errore API GitHub: ' + res.status);
-        const files = await res.json();
-        return files.filter(f => f.name.endsWith('.md') && f.type === 'file');
-    } catch (err) {
-        console.error('Impossibile elencare le guide:', err);
-        return [];
-    }
-}
-
-async function fetchArticle(fileName) {
-    try {
-        const res = await fetch(`${RAW_BASE}/${fileName}`);
-        if (!res.ok) throw new Error('Errore raw: ' + res.status);
-        const raw = await res.text();
-        const { data } = parseFrontmatter(raw);
-        return {
-            fileName: fileName.replace('.md', ''),
-            title: data.title || fileName.replace('.md', ''),
-            slug: data.slug || fileName.replace('.md', ''),
-            date: data.date || '',
-            category: data.category || 'wiki',
-            author: data.author || 'Redazione Moto Italy',
-            excerpt: data.excerpt || '',
-            featured_image: data.featured_image || '',
-            gpx_file: data.gpx_file || null
-        };
-    } catch (err) {
-        console.error('Errore caricamento ' + fileName, err);
-        return null;
-    }
-}
-
-function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function renderArticles(articles) {
+// ===== Ultime guide pubblicate (max 5, dalla più recente) =====
+function renderLatest(articles) {
     if (!articles.length) {
         articlesGrid.innerHTML = `
             <div class="empty-state">
@@ -79,34 +36,32 @@ function renderArticles(articles) {
         return;
     }
 
-    const sorted = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const sorted = [...articles]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
 
-    articlesGrid.innerHTML = sorted.map(article => `
-        <article class="content-card article-card">
-            ${article.featured_image ? `<img src="${article.featured_image}" alt="${article.title}" class="card-image" loading="lazy">` : ''}
-            <div class="article-card-tags">
-                <span class="card-tag tag-wiki">📚 Wiki</span>
-            </div>
-            <h3>${article.title}</h3>
-            <p class="article-excerpt">${article.excerpt}</p>
-            <div class="article-meta">
-                <span>${formatDate(article.date)}</span>
-                <span>·</span>
-                <span>${article.author}</span>
-            </div>
-            <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
-        </article>
-    `).join('');
+    articlesGrid.innerHTML = sorted.map(wikiCardHTML).join('');
 }
 
 async function init() {
+    categoriesGrid.innerHTML = '<div class="loading-state">Caricamento categorie...</div>';
     articlesGrid.innerHTML = '<div class="loading-state">Caricamento guide...</div>';
-    const files = await fetchArticleList();
-    if (!files.length) { renderArticles([]); return; }
-    const articles = (await Promise.all(files.map(f => fetchArticle(f.name)))).filter(Boolean);
-    renderArticles(articles);
+
+    try {
+        const articles = await fetchFolderArticles('wiki');
+        renderCategories(articles);
+        renderLatest(articles);
+    } catch (err) {
+        console.error('Impossibile caricare le guide:', err);
+        renderCategories(null);
+        articlesGrid.innerHTML = `
+            <div class="empty-state">
+                ⚠️ Al momento non riesco a caricare le guide.<br>
+                Riprova tra qualche istante.
+            </div>`;
+    }
 }
 
 init();
 
-console.log('Wiki — caricamento avviato.');
+console.log('Wiki — categorie e ultime guide caricate.');

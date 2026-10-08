@@ -1081,3 +1081,182 @@ html[data-theme="dark"] .theme-icon-dark {
         font-size: 1.5rem;
     }
 }
+
+/* ============================================================
+   WIKI A CATEGORIE, CORRELATI E DISCLAIMER
+   ============================================================ */
+
+/* ===== STATI DI CARICAMENTO / LISTA VUOTA ===== */
+.loading-state,
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--color-text-muted);
+    background: var(--color-card-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+.empty-state a {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ===== TITOLI DI SEZIONE (Wiki) ===== */
+.section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 48px 0 20px;
+}
+
+/* Il primo titolo di sezione segue il sottotitolo: meno spazio sopra */
+.section-heading:first-of-type {
+    margin-top: 8px;
+}
+
+/* ===== CARD CATEGORIE WIKI ===== */
+a.wiki-cat-card {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.wiki-cat-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.wiki-cat-count {
+    align-self: flex-start;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+/* ===== CARD ARTICOLI (tag, meta, immagine) ===== */
+.article-card-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.article-card .card-image {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.tag-wiki {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.tag-bar {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.mini-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #d1fae5;
+    color: #065f46;
+}
+
+[data-theme="dark"] .tag-wiki {
+    background: #2e1065;
+    color: #c4b5fd;
+}
+
+[data-theme="dark"] .tag-bar {
+    background: #431407;
+    color: #fdba74;
+}
+
+[data-theme="dark"] .mini-badge {
+    background: #064e3b;
+    color: #6ee7b7;
+}
+
+/* ===== ARTICOLI CORRELATI ===== */
+.related-articles {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--color-border);
+}
+
+.related-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.related-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.related-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 18px;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.related-item:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.related-item-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.related-item-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+/* ===== DISCLAIMER AFFILIAZIONI NEL FOOTER ===== */
+.site-footer .footer-disclaimer {
+    max-width: 640px;
+    margin: 4px auto 0;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    opacity: 0.9;
+}

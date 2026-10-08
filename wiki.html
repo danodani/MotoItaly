@@ -52,9 +52,15 @@
                 <a href="index.html">Home</a> <span>/</span> <span>Wiki Guide</span>
             </nav>
             <h1 class="page-title">📚 Wiki Guide</h1>
-            <p class="page-subtitle">Guide pratiche e normative per ogni aspetto della vita in moto.</p>
+            <p class="page-subtitle">Guide pratiche, normative e consigli per ogni aspetto della vita in moto. Scegli una categoria oppure sfoglia le ultime pubblicazioni.</p>
 
-            <div class="cards-grid" id="articlesGrid">
+            <h2 class="section-heading" id="categorieHeading">Sfoglia per categoria</h2>
+            <div class="cards-grid" id="categoriesGrid" aria-labelledby="categorieHeading">
+                <div class="loading-state">Caricamento categorie...</div>
+            </div>
+
+            <h2 class="section-heading" id="ultimeHeading">Ultime guide pubblicate</h2>
+            <div class="cards-grid" id="articlesGrid" aria-labelledby="ultimeHeading">
                 <div class="loading-state">Caricamento guide...</div>
             </div>
         </div>
@@ -67,10 +73,16 @@
                 <a href="contatti.html">Contattaci</a>
             </nav>
             <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            <p class="footer-disclaimer">
+                <strong>Trasparenza:</strong> Alcuni link in questa pagina possono essere link di affiliazione.
+                Se acquisti tramite essi, potremmo ricevere una piccola commissione senza costi aggiuntivi per te.
+                Questo ci aiuta a mantenere il sito attivo e gratuito.
+            </p>
         </div>
     </footer>
 
     <script src="js/script.js" defer></script>
+    <script src="js/content.js" defer></script>
     <script src="js/wiki.js" defer></script>
 </body>
 </html>
