@@ -40,7 +40,9 @@ export async function onRequest(context) {
         });
     }
 
-    // Con la rotta [...path] i segmenti arrivano come array
+    // Con la rotta catch-all [[path]] i segmenti arrivano come array
+    // in context.params.path (es. /api/contenuti/content/wiki →
+    // params.path = ['content', 'wiki'])
     const rawPath = Array.isArray(params.path) ? params.path.join('/') : String(params.path || '');
     const segments = rawPath
         .split('/')

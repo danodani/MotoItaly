@@ -54,5 +54,5 @@ Configurazione (una tantum):
 - Categorie: `neofiti`, `manutenzione`, `normative`, `sicurezza`, `viaggi`, `faq`
   (campo `categoria` nel frontmatter; campo `tags` per gli articoli correlati)
 - `articolo.html` — in fondo mostra gli **articoli correlati** (stesso tag, wiki + bar, max 5)
-- Logica condivisa in `js/content.js`; proxy in `functions/api/contenuti/[...path].js`
+- Logica condivisa in `js/content.js`; proxy in `functions/api/contenuti/[[path]].js`
 
