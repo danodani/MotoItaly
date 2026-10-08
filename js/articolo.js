@@ -2,26 +2,28 @@
 // TEMPLATE ARTICOLO — Carica un singolo .md + correlati per tag
 // ============================================================
 
-// ===== Articoli correlati (stesso tag, wiki + bar, max 5) =====
+// ===== Articoli correlati (solo Bar, max 5) =====
+// Per articoli wiki: mostra solo post del Bar
+// Per articoli Bar: mostra solo post del Bar, heading "Leggi anche"
 // Se l'articolo non ha tag (o nessuno condivide i tag), ripiega sugli
-// ultimi 5 pubblicati tra wiki + bar, dal più nuovo al più vecchio.
-async function renderRelated(currentTags, currentFile) {
+// ultimi 5 pubblicati del Bar, dal più nuovo al più vecchio.
+async function renderRelated(currentTags, currentFile, sourceFolder) {
     const section = document.getElementById('relatedArticles');
     const list = document.getElementById('relatedList');
+    const heading = document.getElementById('relatedHeading');
     if (!section || !list) return;
 
+    const isWiki = sourceFolder === 'wiki';
     const tags = frontmatterToList(currentTags).map(t => t.toLowerCase());
 
     let all = [];
     try {
-        // catch per-cartella: se una cartella non si elenca, usa l'altra
-        const perFolder = await Promise.all(
-            CONTENT_FOLDERS.map(f => fetchFolderArticles(f).catch(err => {
-                console.warn('Cartella non disponibile per correlati:', f, err);
-                return [];
-            }))
-        );
-        all = perFolder.flat();
+        // Prende solo articoli del Bar (folder 'bar')
+        const articles = await fetchFolderArticles('bar').catch(err => {
+            console.warn('Cartella bar non disponibile per correlati:', err);
+            return [];
+        });
+        all = articles;
     } catch (err) {
         console.error('Articoli correlati non disponibili:', err);
         return;
@@ -42,16 +44,21 @@ async function renderRelated(currentTags, currentFile) {
 
     if (!related.length) return;
 
-        list.innerHTML = related.map(a => `
-            <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="related-item">
-                <span class="related-item-title">${escapeHTML(a.title || '')}</span>
-                <span class="related-item-meta">
-                    <span>📅 ${formatDateIT(a.date)}</span>
-                    <span>${a.folder === 'wiki' ? '📚 Wiki' : '☕ Bar'}</span>
-                </span>
-            </a>`).join('');
+    // Cambia heading per articoli Bar
+    if (!isWiki && heading) {
+        heading.textContent = '🔗 Leggi anche';
+    }
 
-        section.hidden = false;
+    list.innerHTML = related.map(a => `
+        <a href="articolo.html?file=${encodeURIComponent(a.fileName)}" class="related-item">
+            <span class="related-item-title">${escapeHTML(a.title || '')}</span>
+            <span class="related-item-meta">
+                <span>📅 ${formatDateIT(a.date)}</span>
+                <span>☕ Bar</span>
+            </span>
+        </a>`).join('');
+
+    section.hidden = false;
 }
 
 async function loadArticle() {
@@ -147,8 +154,8 @@ async function loadArticle() {
         document.getElementById('affiliateDisclaimer').hidden = false;
     }
 
-    // Articoli correlati per tag
-    renderRelated(data.tags || [], file);
+    // Articoli correlati per tag (solo Bar)
+    renderRelated(data.tags || [], file, sourceFolder);
 }
 
 loadArticle();
