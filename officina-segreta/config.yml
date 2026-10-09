@@ -35,7 +35,7 @@ collections:
         name: "category"
         widget: "select"
         options:
-          - { label: "Wiki / Normative", value: "wiki" }
+          - { label: "Wiki & Guide", value: "wiki" }
           - { label: "Blog / Da Bar", value: "bar" }
         default: "bar"
       - { label: "Autore", name: "author", widget: "string", default: "Redazione Moto Italy" }
@@ -49,9 +49,9 @@ collections:
       - { label: "File GPX/KML (opzionale)", name: "gpx_file", widget: "file", required: false }
       - { label: "Contenuto", name: "body", widget: "markdown" }
 
-  # ============ WIKI / GUIDE E NORMATIVE ============
+  # ============ WIKI & GUIDE ============
   - name: "wiki"
-    label: "📚 Wiki / Guide e Normative"
+    label: "📚 Wiki & Guide"
     label_singular: "Guida Wiki"
     folder: "content/wiki"
     create: true
@@ -68,7 +68,7 @@ collections:
         name: "category"
         widget: "select"
         options:
-          - { label: "Wiki / Normative", value: "wiki" }
+          - { label: "Wiki & Guide", value: "wiki" }
           - { label: "Blog / Da Bar", value: "bar" }
         default: "wiki"
       - label: "Categoria"

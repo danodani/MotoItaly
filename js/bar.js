@@ -20,7 +20,7 @@ function renderArticles(articles) {
     articlesGrid.innerHTML = sorted.map(article => {
         const isWiki = article.category === 'wiki';
         const tagClass = isWiki ? 'tag-wiki' : 'tag-bar';
-        const tagLabel = isWiki ? '📚 Wiki & Normative' : '☕ Da Bar';
+        const tagLabel = isWiki ? '📚 Wiki & Guide' : '☕ Da Bar';
         const gpxBadge = article.gpx_file ? '<span class="mini-badge">🗺️ GPX</span>' : '';
         const safeTitle = escapeHTML(article.title || '');
         const safeExcerpt = escapeHTML(article.excerpt || '');

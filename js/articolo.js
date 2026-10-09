@@ -108,7 +108,7 @@ async function renderWikiSameCategory(currentCategoria, currentFile) {
         const catInfo = WIKI_CATEGORIES.find(c => c.slug === catSlug);
         heading.textContent = catInfo
             ? `${catInfo.icon} Altre guide: ${catInfo.title}`
-            : '📚 Altre guide della Wiki';
+            : '📚 Altre guide della Wiki & Guide';
     }
 
     // Formato lista/indice (stesse classi della pagina wiki.html)
@@ -161,7 +161,7 @@ async function loadArticle() {
     document.title = `${data.title} - Moto Italy`;
 
     // Breadcrumb
-    document.getElementById('breadcrumbSection').textContent = isWiki ? 'Wiki' : 'Il Bar';
+    document.getElementById('breadcrumbSection').textContent = isWiki ? 'Wiki & Guide' : 'Il Bar';
     document.getElementById('breadcrumbSection').href = isWiki ? 'wiki.html' : 'bar.html';
     document.getElementById('breadcrumbTitle').textContent =
         data.title && data.title.length > 40 ? data.title.slice(0, 40) + '…' : (data.title || 'Articolo');
@@ -171,7 +171,7 @@ async function loadArticle() {
     const wikiCat = isWiki ? WIKI_CATEGORIES.find(c => c.slug === data.categoria) : null;
     catEl.textContent = wikiCat
         ? `${wikiCat.icon} ${wikiCat.title}`
-        : (isWiki ? '📚 Wiki & Normative' : '☕ Da Bar');
+        : (isWiki ? '📚 Wiki & Guide' : '☕ Da Bar');
     catEl.className = `article-category ${isWiki ? 'cat-wiki' : 'cat-blog'}`;
 
     // Titolo

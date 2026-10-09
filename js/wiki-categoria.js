@@ -15,12 +15,12 @@ function renderCategoryHeader() {
     if (!category) {
         document.title = 'Categoria non trovata - Moto Italy';
         catTitle.textContent = '❌ Categoria non trovata';
-        catDescription.textContent = 'La categoria che cerchi non esiste. Torna alla Wiki Guide per sceglierne una.';
+        catDescription.textContent = 'La categoria che cerchi non esiste. Torna alla Wiki & Guide per sceglierne una.';
         catBreadcrumb.textContent = 'Categoria non trovata';
         return;
     }
 
-    document.title = `${category.icon} ${category.title} - Wiki Guide - Moto Italy`;
+    document.title = `${category.icon} ${category.title} - Wiki & Guide - Moto Italy`;
     catTitle.textContent = `${category.icon} ${category.title}`;
     catDescription.textContent = category.description;
     catBreadcrumb.textContent = category.title;
@@ -48,7 +48,7 @@ async function init() {
     if (!category) {
         articlesGrid.innerHTML = `
             <div class="empty-state">
-                <a href="wiki.html">← Torna alla Wiki Guide</a>
+                <a href="wiki.html">← Torna alla Wiki & Guide</a>
             </div>`;
         return;
     }
