@@ -123,6 +123,71 @@ async function renderWikiSameCategory(currentCategoria, currentFile) {
     section.hidden = false;
 }
 
+// ===== SEO: aggiorna title/description/OG/canonical dopo il caricamento =====
+// Il rendering è client-side: senza questi meta i motori di ricerca vedrebbero
+// solo i valori generici del template.
+function updateSeoMeta(data, content, isWiki) {
+    const siteName = 'Moto Italy';
+    const title = (data.title && data.title.trim()) || 'Articolo';
+    const fullTitle = `${title} - ${siteName}`;
+
+    // Description: excerpt del frontmatter, altrimenti prime ~150 lettere del contenuto
+    let description = (data.excerpt || '').trim();
+    if (!description && content) {
+        description = content
+            .replace(/[#*_>`~\[\]()!-]/g, ' ')   // via la formattazione Markdown
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 150);
+        // Evita di tagliare a metà parola
+        if (description.length === 150) {
+            const lastSpace = description.lastIndexOf(' ');
+            if (lastSpace > 100) description = description.slice(0, lastSpace);
+            description += '…';
+        }
+    }
+
+    // Canonical = URL completo dell'articolo corrente (con ?file=...):
+    // senza il parametro ogni articolo risulterebbe duplicato dell'altro.
+    const canonicalUrl = new URL(window.location.href);
+    canonicalUrl.hash = '';                         // via solo l'eventuale frammento #
+
+    const setMeta = (selector, attr, key, value) => {
+        let el = document.head.querySelector(selector);
+        if (!el) {
+            el = document.createElement('meta');
+            el.setAttribute(attr, key);
+            document.head.appendChild(el);
+        }
+        el.setAttribute('content', value);
+    };
+    const setLink = (rel, href) => {
+        let el = document.head.querySelector(`link[rel="${rel}"]`);
+        if (!el) {
+            el = document.createElement('link');
+            el.setAttribute('rel', rel);
+            document.head.appendChild(el);
+        }
+        el.setAttribute('href', href);
+    };
+
+    document.title = fullTitle;
+    setMeta('meta[name="description"]', 'name', 'description', description);
+    setMeta('meta[property="og:title"]', 'property', 'og:title', fullTitle);
+    setMeta('meta[property="og:description"]', 'property', 'og:description', description);
+    setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl.href);
+    setMeta('meta[property="og:type"]', 'property', 'og:type', 'article');
+    setLink('canonical', canonicalUrl.href);
+
+    // Data di pubblicazione (utile ai crawler e ai rich snippet)
+    if (data.date) {
+        setMeta('meta[property="article:published_time"]', 'property', 'article:published_time', data.date);
+    }
+    if (isWiki) {
+        setMeta('meta[property="article:section"]', 'property', 'article:section', 'Wiki & Guide');
+    }
+}
+
 async function loadArticle() {
     const params = new URLSearchParams(window.location.search);
     // Compatibilità con i vecchi link che usavano il parametro "slug"
@@ -223,6 +288,9 @@ async function loadArticle() {
     if (isWiki) {
         renderWikiSameCategory(data.categoria || '', file);
     }
+
+    // SEO: title, description, Open Graph e canonical dinamici
+    updateSeoMeta(data, content, isWiki);
 }
 
 loadArticle();

@@ -1,0 +1,10 @@
+{
+  "name": "motoitaly",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Moto Italy — sito statico (HTML/CSS/Vanilla JS) su Cloudflare Pages",
+  "scripts": {
+    "build": "node generate-sitemap.js",
+    "sitemap": "node generate-sitemap.js"
+  }
+}
