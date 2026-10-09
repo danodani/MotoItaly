@@ -1,0 +1,59 @@
+---
+// ============================================================
+// src/pages/wiki/[slug].astro — pagine statiche della Wiki
+// ------------------------------------------------------------
+// getStaticPaths() trasforma ogni Markdown di src/content/wiki/
+// in una pagina HTML fisica (/wiki/<slug>.html) durante il build.
+// Il vecchio template articolo.html?file=... resta in public/
+// per compatibilità con i link storici.
+// ============================================================
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('wiki', ({ data }) => {
+        // Includi solo articoli con titolo (i draft non hanno data)
+        return Boolean(data.title);
+    });
+
+    return posts.map((post) => ({
+        // post.id = nome del file .md senza estensione (slug)
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const { title, date, author, excerpt, categoria } = post.data;
+const dateStr = date.toLocaleDateString('it-IT', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
+const description = excerpt || `${title} — guida della Wiki di Moto Italy.`;
+---
+
+<Layout
+    title={`${title} - Wiki & Guide - Moto Italy`}
+    description={description}
+>
+    <main class="page-content">
+        <div class="container article-container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> <span>/</span> <a href="/wiki.html">Wiki &amp; Guide</a> <span>/</span> <span>{title}</span>
+            </nav>
+            <article>
+                <h1 class="page-title">{title}</h1>
+                <p class="article-meta">
+                    {dateStr}
+                    {author && <> · {author}</>}
+                </p>
+                <div class="article-body">
+                    <Content />
+                </div>
+            </article>
+        </div>
+    </main>
+</Layout>

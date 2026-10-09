@@ -18,7 +18,7 @@ collections:
   - name: "bar"
     label: "☕ Il Bar del Motociclista"
     label_singular: "Post da Bar"
-    folder: "content/bar"
+    folder: "src/content/bar"
     create: true
     slug: "{{slug}}"
     extension: "md"
@@ -53,7 +53,7 @@ collections:
   - name: "wiki"
     label: "📚 Wiki & Guide"
     label_singular: "Guida Wiki"
-    folder: "content/wiki"
+    folder: "src/content/wiki"
     create: true
     slug: "{{slug}}"
     extension: "md"

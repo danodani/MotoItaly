@@ -1,65 +1,11 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Moto Italy - Il portale italiano con strumenti, comparatori e calcolatori per il mondo delle moto.">
-    <title>Moto Italy - Portale</title>
+---
+import Layout from '../layouts/Layout.astro';
+---
 
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
-    </script>
-
-    <link rel="preload" href="fonts/inter-v20-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="fonts/inter-v20-latin-600.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="index.html" class="logo">
-                <img src="img/logo.png" alt="Moto Italy" class="logo-img">
-                <span class="logo-text">Moto Italy</span>
-            </a>
-
-            <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
-                    <span class="theme-icon theme-icon-light" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                        </svg>
-                    </span>
-                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </span>
-                </button>
-
-                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-
-            <nav class="main-nav" id="mainNav">
-                <ul>
-                    <li><a href="wiki.html">Wiki &amp; Guide</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                    <li><a href="strumenti.html">Strumenti Utili</a></li>
-                    <li><a href="bar.html">Il Bar del Motociclista</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
+<Layout
+    title="Moto Italy - Portale"
+    description="Moto Italy - Il portale italiano con strumenti, comparatori e calcolatori per il mondo delle moto."
+>
     <!-- HERO -->
     <section class="hero">
         <div class="container">
@@ -69,7 +15,7 @@
                 Gratis, senza registrazione.
             </p>
             <div class="hero-actions">
-                <a href="strumenti.html" class="btn btn-primary">Esplora gli strumenti</a>
+                <a href="/strumenti.html" class="btn btn-primary">Esplora gli strumenti</a>
                 <a href="#community" class="btn btn-secondary">Unisciti alla community</a>
             </div>
         </div>
@@ -125,7 +71,7 @@
                     <h3>Calcolatore bollo moto</h3>
                     <p>Stima il bollo annuale in base a modello, potenza, classe Euro e regione di residenza.</p>
                     <span class="card-tag tag-calcolatore">Calcolatore</span>
-                    <a href="bollo.html" class="card-link">Calcola ora →</a>
+                    <a href="/bollo.html" class="card-link">Calcola ora →</a>
                 </article>
 
                 <article class="tool-card" data-category="quiz">
@@ -133,7 +79,7 @@
                     <h3>Che moto fa per te?</h3>
                     <p>Rispondi a poche domande e scopri quale tipo di moto si adatta al tuo stile di guida.</p>
                     <span class="card-tag tag-quiz">Quiz</span>
-                    <a href="strumenti.html" class="card-link">Prossimamente →</a>
+                    <a href="/strumenti.html" class="card-link">Prossimamente →</a>
                 </article>
 
                 <article class="tool-card" data-category="comparatore">
@@ -141,11 +87,11 @@
                     <h3>Comparatore modelli</h3>
                     <p>Confronta specifiche tecniche, prezzi e caratteristiche di due o più moto.</p>
                     <span class="card-tag tag-comparatore">Comparatore</span>
-                    <a href="strumenti.html" class="card-link">Prossimamente →</a>
+                    <a href="/strumenti.html" class="card-link">Prossimamente →</a>
                 </article>
             </div>
             <div class="tools-cta">
-                <a href="strumenti.html" class="btn btn-secondary">Vedi tutti gli strumenti →</a>
+                <a href="/strumenti.html" class="btn btn-secondary">Vedi tutti gli strumenti →</a>
             </div>
         </div>
     </section>
@@ -164,17 +110,4 @@
             </p>
         </div>
     </section>
-
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <nav class="footer-nav" aria-label="Link secondari">
-                <a href="chi-sono.html">Chi sono</a>
-                <a href="contatti.html">Contattaci</a>
-            </nav>
-            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
-        </div>
-    </footer>
-
-    <script src="js/script.js" defer></script>
-</body>
-</html>
+</Layout>

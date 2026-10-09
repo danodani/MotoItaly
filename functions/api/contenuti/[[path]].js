@@ -49,14 +49,23 @@ export async function onRequest(context) {
         .filter(Boolean)
         .map(safeDecode);
 
-    // Solo content/... e mai segmenti nascosti o di traversal
+    // Solo src/content/... (migrazione Astro) e la forma legacy
+    // content/... usata dai vecchi client JS: entrambe vengono
+    // mappate su src/content/... nel repo.
+    const isLegacyContent = segments[0] === 'content';
+    const isSrcContent = segments[0] === 'src' && segments[1] === 'content';
     const valid = segments.length >= 2
-        && segments[0] === 'content'
+        && (isLegacyContent || isSrcContent)
         && segments.every(s => s !== '.' && s !== '..' && !s.startsWith('.'));
 
     if (!valid) {
         return jsonResponse({ message: 'Not Found' }, 404);
     }
+
+    // Percorso reale nel repo: content/... → src/content/...
+    const repoSegments = isLegacyContent
+        ? ['src', 'content', ...segments.slice(1)]
+        : segments;
 
     // Il repo è privato: serve sempre GITHUB_TOKEN (Fine-grained PAT
     // Contents: Read-only su danodani/MotoItaly, impostato su Pages →
@@ -67,7 +76,7 @@ export async function onRequest(context) {
         }, 503);
     }
 
-    const githubUrl = `https://api.github.com/repos/${REPO}/contents/${segments.join('/')}?ref=${BRANCH}`;
+    const githubUrl = `https://api.github.com/repos/${REPO}/contents/${repoSegments.join('/')}?ref=${BRANCH}`;
     const headers = {
         'Accept': 'application/vnd.github+json',
         'User-Agent': 'MotoItaly-Pages',

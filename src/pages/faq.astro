@@ -1,0 +1,284 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Dati strutturati FAQPage (SEO / AI-GEO) — 15 coppie,
+// specchio fedele dei <details> del main qui sotto.
+const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+        {
+            '@type': 'Question',
+            name: 'Quali patente serve per guidare una moto?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'La A1 (125 cc, dai 16 anni), la A2 (fino a 35 kW, dai 18 anni) e la A (senza limiti, dai 24 anni). Con la sola patente B servono 3 anni di patente e il corso formativo di 6 ore.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Posso guidare una moto con la patente B?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Solo moto fino a 125 cc e 11 kW, con patente B da almeno 3 anni e corso di formazione completo. Per 300 cc o superiori serve la patente A1, A2 o A: guidarle senza e "guida senza patente", con multa e fermo del veicolo.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Quali documenti devo avere sempre con me in moto?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Patente valida, libretto di circolazione, assicurazione RCA in corso e bollo pagato. I documenti digitali su smartphone sono accettati, ma una copia cartacea nella tasca sottosella ti salva se il telefono si scarica.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Ogni quanto va fatta la revisione?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Ogni 2 anni, controllando la data stampata sul libretto. In motorizzazione verificano freni, luci, pneumatici, emissioni e numeri di telaio. Revisione scaduta: multa da 160 a 640 euro e divieto di circolazione.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Quanto costa il bollo della moto?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Dipende da cilindrata, potenza, classe Euro e provincia: da poche decine di euro per le 125 fino a circa 150-250 euro per le maxi. Le moto d\u2019epoca (oltre 20 anni) pagano un importo simbolico.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: "L'assicurazione RC copre anche i danni alla mia moto?",
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'No: la RCA copre solo i danni che causi agli altri. Per la tua moto servono garanzie accessorie: RC Scelta, furto e incendio, assistenza stradale e infortuni conducente.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: "Quanto costa mantenere una moto all'anno?",
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Circa 1.600-2.600 euro all\u2019anno tutto compreso (bollo, assicurazione, manutenzione e benzina) a seconda della cilindrata e dei chilometri. Le piccole cilindrate si fermano intorno ai 120-150 euro al mese.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Ogni quanto va fatto il cambio olio?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Ogni 6.000-10.000 km o ogni 12 mesi, prendendo il primo termine che scade. Usa la viscosita indicata nel libretto (es. 10W-40 con specifica JASO) e sostituisci sempre anche il filtro.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Ogni quanto va pulita e lubrificata la catena?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Pulizia e controllo tensione ogni 500-800 km, lubrificazione ogni 1.000-1.500 km. Usa solo detergenti e lubrificanti specifici per catene: benzina e prodotti generici rovinano le guarnizioni.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Ogni quanto va cambiato il casco?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Ogni 5 anni dalla produzione (non dall\u2019acquisto), anche se non lo usi, e subito dopo qualsiasi caduta: la schiuma interna assorbe l\u2019impatto e non si vede a occhio.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Perche la moto non parte?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Nella maggior parte dei casi: batteria scarica, cavalletto abbassato, interruttore di sicurezza spento, benzina finita o fusibile bruciato. Controlla questi cinque elementi in quest\u2019ordine prima di chiamare il meccanico.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Meglio moto nuova o usata?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'La nuova da garanzia e zero sorprese ma svaluta forte; l\u2019usata di 3-5 anni risparmia il 20-40% ed e spesso la scelta migliore per iniziare. Fai sempre controllare la moto prima di comprare.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: "Cos'e la community r/MotoItaly?",
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'E il subreddit italiano dei motociclisti da cui e nato questo sito: idee, esperienze e dritte tra appassionati. Molte delle guide pubblicate qui nascono dalle discussioni del subreddit.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Come posso proporre un articolo o una guida?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Apri una discussione su r/MotoItaly oppure scrivici dalla pagina contatti: valutiamo ogni idea e le guide migliori vengono pubblicate nella Wiki con credito all\u2019autore.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Il sito e gratuito? Ci sono link affiliati?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Tutti i contenuti sono gratuiti e senza pubblicita invadente. Alcuni link verso i negozi partner possono essere di affiliazione: se acquisti attraverso di essi, riceviamo una piccola commissione senza costi aggiuntivi per te.'
+            }
+        }
+    ]
+};
+---
+
+<Layout
+    title="FAQ - Domande Frequenti - Moto Italy"
+    description="Risposte rapide alle domande più comuni su patenti, costi, manutenzione e community. Per i dettagli completa, vai alle guide della Wiki."
+>
+    <Fragment slot="head">
+        <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)}></script>
+    </Fragment>
+
+    <main class="page-content">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> <span>/</span> <span>FAQ</span>
+            </nav>
+            <h1 class="page-title">❓ Domande Frequenti (FAQ)</h1>
+            <p class="page-subtitle">Risposte rapide alle domande più comuni su patenti, costi, manutenzione e community. Per i dettagli completa, vai alle guide della Wiki.</p>
+
+            <!-- ===== Burocrazia e Patenti ===== -->
+            <section class="faq-category" aria-labelledby="faq-burocrazia">
+                <h2 class="section-heading" id="faq-burocrazia">📋 Burocrazia e Patenti</h2>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-question">Quali patente serve per guidare una moto?</summary>
+                        <div class="faq-answer">
+                            <p>La <strong>A1</strong> (125 cc, dai 16 anni), la <strong>A2</strong> (fino a 35 kW, dai 18 anni) e la <strong>A</strong> (senza limiti, dai 24 anni). Con la sola patente B servono 3 anni di patente e il corso formativo di 6 ore.</p>
+                            <p class="faq-link">👉 Per la procedura dettagliata, consulta la <a href="/articolo.html?file=patente-a1-a2-a-differenze">guida completa nella Wiki</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Posso guidare una moto con la patente B?</summary>
+                        <div class="faq-answer">
+                            <p>Solo moto fino a <strong>125 cc e 11 kW</strong>, con patente B da almeno 3 anni e corso di formazione completo. Per 300 cc o superiori serve la patente A1, A2 o A: guidarle senza è "guida senza patente", con multa e fermo del veicolo.</p>
+                            <p class="faq-link">👉 Approfondisci nella guida <a href="/articolo.html?file=posso-guidare-moto-con-patente-b">Posso guidare una moto con la patente B?</a></p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Quali documenti devo avere sempre con me in moto?</summary>
+                        <div class="faq-answer">
+                            <p>Patente valida, libretto di circolazione, assicurazione RCA in corso e bollo pagato. I documenti digitali su smartphone sono accettati, ma una copia cartacea nella tasca sottosella ti salva se il telefono si scarica.</p>
+                            <p class="faq-link">👉 Elenco completo nella guida <a href="/articolo.html?file=documenti-obbligatori-moto">Documenti obbligatori in moto</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Ogni quanto va fatta la revisione?</summary>
+                        <div class="faq-answer">
+                            <p><strong>Ogni 2 anni</strong>, controllando la data stampata sul libretto. In motorizzazione verificano freni, luci, pneumatici, emissioni e numeri di telaio. Revisione scaduta: multa da 160 a 640 € e divieto di circolazione.</p>
+                            <p class="faq-link">👉 Tutti i dettagli nella guida <a href="/articolo.html?file=revisione-moto-quando-cosa-controllano">Revisione moto: quando farla</a>.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- ===== Costi, Bollo e Assicurazione ===== -->
+            <section class="faq-category" aria-labelledby="faq-costi">
+                <h2 class="section-heading" id="faq-costi">💶 Costi, Bollo e Assicurazione</h2>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-question">Quanto costa il bollo della moto?</summary>
+                        <div class="faq-answer">
+                            <p>Dipende da cilindrata, potenza, classe Euro e provincia: da poche decine di euro per le 125 fino a circa 150–250 € per le maxi. Le moto d'epoca (oltre 20 anni) pagano un importo simbolico.</p>
+                            <p class="faq-link">👉 Calcola subito con lo <a href="/bollo.html">strumento bollo</a> o leggi la <a href="/articolo.html?file=bollo-moto-calcolo-pagamento">guida al bollo</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">L'assicurazione RC copre anche i danni alla mia moto?</summary>
+                        <div class="faq-answer">
+                            <p>No: la <strong>RCA copre solo i danni che causi agli altri</strong>. Per la tua moto servono garanzie accessorie: RC Scelta, furto e incendio, assistenza stradale e infortuni conducente.</p>
+                            <p class="faq-link">👉 Scopri come risparmiare nella guida <a href="/articolo.html?file=assicurazione-moto-obblighi-risparmio">Assicurazione moto</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Quanto costa mantenere una moto all'anno?</summary>
+                        <div class="faq-answer">
+                            <p>Circa <strong>€ 1.600–2.600 all'anno</strong> tutto compreso (bollo, assicurazione, manutenzione e benzina) a seconda della cilindrata e dei chilometri. Le piccole cilindrate si fermano intorno ai € 120–150 al mese.</p>
+                            <p class="faq-link">👉 Numeri nel dettaglio nella guida <a href="/articolo.html?file=quanto-costa-mantenere-una-moto">Quanto costa mantenere una moto</a>.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- ===== Manutenzione e Utilizzo ===== -->
+            <section class="faq-category" aria-labelledby="faq-manutenzione">
+                <h2 class="section-heading" id="faq-manutenzione">🔧 Manutenzione e Utilizzo</h2>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-question">Ogni quanto va fatto il cambio olio?</summary>
+                        <div class="faq-answer">
+                            <p>Ogni <strong>6.000–10.000 km o ogni 12 mesi</strong>, prendendo il primo termine che scade. Usa la viscosità indicata nel libretto (es. 10W-40 con specifica JASO) e sostituisci sempre anche il filtro.</p>
+                            <p class="faq-link">👉 Procedura passo passo nella guida <a href="/articolo.html?file=cambio-olio-motore">Cambio olio motore</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Ogni quanto va pulita e lubrificata la catena?</summary>
+                        <div class="faq-answer">
+                            <p>Pulizia e controllo tensione <strong>ogni 500–800 km</strong>, lubrificazione ogni 1.000–1.500 km. Usa solo detergenti e lubrificanti specifici per catene: benzina e prodotti generici rovinano le guarnizioni.</p>
+                            <p class="faq-link">👉 Guida completa nella Wiki: <a href="/articolo.html?file=pulizia-lubrificazione-catena">Pulizia e lubrificazione della catena</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Ogni quanto va cambiato il casco?</summary>
+                        <div class="faq-answer">
+                            <p>Ogni <strong>5 anni dalla produzione</strong> (non dall'acquisto), anche se non lo usi, e <strong>subito dopo qualsiasi caduta</strong>: la schiuma interna assorbe l'impatto e non si vede a occhio.</p>
+                            <p class="faq-link">👉 Come sceglierlo e cambiarlo nella guida <a href="/articolo.html?file=ogni-quanto-cambiare-casco">Ogni quanto cambiare il casco</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Perché la moto non parte?</summary>
+                        <div class="faq-answer">
+                            <p>Nella maggior parte dei casi: <strong>batteria scarica, cavalletto abbassato, interruttore di sicurezza spento, benzina finita o fusibile bruciato</strong>. Controlla questi cinque elementi in quest'ordine prima di chiamare il meccanico.</p>
+                            <p class="faq-link">👉 Checklist completa nella guida <a href="/articolo.html?file=cosa-fare-se-moto-non-parte">Cosa fare se la moto non parte</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Meglio moto nuova o usata?</summary>
+                        <div class="faq-answer">
+                            <p>La nuova dà garanzia e zero sorprese ma svaluta forte; l'<strong>usata di 3–5 anni</strong> risparmia il 20–40% ed è spesso la scelta migliore per iniziare. Fai sempre controllare la moto prima di comprare.</p>
+                            <p class="faq-link">👉 Confronto completo nella guida <a href="/articolo.html?file=meglio-moto-nuova-o-usata">Meglio moto nuova o usata</a>.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- ===== Community r/MotoItaly ===== -->
+            <section class="faq-category" aria-labelledby="faq-community">
+                <h2 class="section-heading" id="faq-community">💬 Community r/MotoItaly</h2>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-question">Cos'è la community r/MotoItaly?</summary>
+                        <div class="faq-answer">
+                            <p>È il <strong>subreddit italiano dei motociclisti</strong> da cui è nato questo sito: idee, esperienze e dritte tra appassionati. Molte delle guide pubblicate qui nascono dalle discussioni del subreddit.</p>
+                            <p class="faq-link">👉 Unisciti alla discussione su <a href="https://www.reddit.com/r/MotoItaly/" target="_blank" rel="noopener">r/MotoItaly</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Come posso proporre un articolo o una guida?</summary>
+                        <div class="faq-answer">
+                            <p>Apri una discussione su <a href="https://www.reddit.com/r/MotoItaly/" target="_blank" rel="noopener">r/MotoItaly</a> oppure scrivici dalla pagina contatti: valutiamo ogni idea e le guide migliori vengono pubblicate nella Wiki con credito all'autore.</p>
+                            <p class="faq-link">👉 Scrivici dalla pagina <a href="/contatti.html">Contattaci</a>.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Il sito è gratuito? Ci sono link affiliati?</summary>
+                        <div class="faq-answer">
+                            <p>Tutti i contenuti sono gratuiti e senza pubblicità invadente. Alcuni link verso i negozi partner possono essere di affiliazione: se acquisti attraverso di essi, riceviamo una piccola commissione <strong>senza costi aggiuntivi per te</strong>.</p>
+                            <p class="faq-link">👉 Leggi i dettagli scrivendoci dalla pagina <a href="/contatti.html">Contattaci</a>.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+        </div>
+    </main>
+</Layout>

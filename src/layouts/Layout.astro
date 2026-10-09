@@ -1,0 +1,113 @@
+---
+// ============================================================
+// Layout.astro — scheletro condiviso di tutte le pagine Astro
+// ------------------------------------------------------------
+// Props SEO dinamiche (title, description, url, og:title):
+//   <Layout title="..." description="..." >
+// Lo slot principale inietta il <main> della pagina;
+// lo slot name="head" inietta script extra in <head> (es. JSON-LD).
+// ============================================================
+interface Props {
+    title: string;
+    description: string;
+    ogTitle?: string;
+    canonicalUrl?: string;
+}
+
+const { title, description, ogTitle, canonicalUrl } = Astro.props;
+
+const SITE_URL = 'https://motoitaly.pages.dev';
+const pageTitle = title;
+const og = ogTitle || title;
+const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
+---
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content={description}>
+    <title>{pageTitle}</title>
+
+    <!-- SEO / Open Graph -->
+    <link rel="canonical" href={url}>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content={og}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={url}>
+    <meta property="og:site_name" content="Moto Italy">
+    <meta name="twitter:card" content="summary">
+
+    <!-- Slot per script di pagina (es. JSON-LD FAQPage) -->
+    <slot name="head" />
+
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'dark' || saved === 'light' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <link rel="preload" href="/fonts/inter-v20-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/inter-v20-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <img src="/img/logo.png" alt="Moto Italy" class="logo-img">
+                <span class="logo-text">Moto Italy</span>
+            </a>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+                    <span class="theme-icon theme-icon-light" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l-1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </span>
+                    <span class="theme-icon theme-icon-dark" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Apri menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="/wiki.html">Wiki &amp; Guide</a></li>
+                    <li><a href="/faq.html">FAQ</a></li>
+                    <li><a href="/strumenti.html">Strumenti Utili</a></li>
+                    <li><a href="/bar.html">Il Bar del Motociclista</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <nav class="footer-nav" aria-label="Link secondari">
+                <a href="/chi-sono.html">Chi sono</a>
+                <a href="/contatti.html">Contattaci</a>
+            </nav>
+            <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

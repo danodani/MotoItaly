@@ -15,7 +15,7 @@
 
 const CONTENT_FOLDERS = ['wiki', 'bar'];
 const CONTENT_LIST_BASE = '/api/contenuti';
-const CONTENT_RAW_BASE = '/content';
+const CONTENT_RAW_BASE = '/src/content';
 
 // Categorie della wiki (anche in officina-segreta/config.yml)
 const WIKI_CATEGORIES = [

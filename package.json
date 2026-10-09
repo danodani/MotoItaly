@@ -1,10 +1,18 @@
 {
   "name": "motoitaly",
+  "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Moto Italy — sito statico (HTML/CSS/Vanilla JS) su Cloudflare Pages",
+  "description": "Moto Italy — sito Astro (SSG) su Cloudflare Pages con Sveltia CMS",
   "scripts": {
-    "build": "node generate-sitemap.js",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
     "sitemap": "node generate-sitemap.js"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.3.0",
+    "astro": "^5.1.0"
   }
 }
+

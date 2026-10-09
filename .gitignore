@@ -1,0 +1,10 @@
+# Dipendenze
+node_modules/
+
+# Build Astro
+dist/
+.astro/
+
+# Ambiente
+.env
+.env.production

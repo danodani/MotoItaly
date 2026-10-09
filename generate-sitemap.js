@@ -17,8 +17,8 @@ const OUTPUT = path.join(__dirname, 'sitemap.xml');
 
 // Cartelle contenuti (Sveltia CMS)
 const CONTENT_DIRS = [
-    path.join(__dirname, 'content', 'wiki'),
-    path.join(__dirname, 'content', 'bar')
+    path.join(__dirname, 'src', 'content', 'wiki'),
+    path.join(__dirname, 'src', 'content', 'bar')
 ];
 
 // Pagine statiche pubbliche (esclusi template con query: articolo.html, wiki-categoria.html)
