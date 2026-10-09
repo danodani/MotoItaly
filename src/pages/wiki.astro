@@ -40,6 +40,13 @@ const sections = categoryOrder
     .map((cat) => {
         const catInfo = WIKI_CATEGORIES.find((c) => c.slug === cat);
         const title = catInfo ? `${catInfo.icon} ${catInfo.title}` : '📁 Altre guide';
+        const posts = [...(byCategory.get(cat) || [])].sort(
+            (a, b) => b.data.date.getTime() - a.data.date.getTime()
+        );
+        return { id: `cat-${cat}`, title, posts };
+    });
+---
+
 <Layout
     title="Wiki & Guide - Moto Italy"
     description="Wiki & Guide per motociclisti: guide pratiche su manutenzione, sicurezza, viaggi e molto altro."
@@ -112,9 +119,3 @@ const sections = categoryOrder
         sections.forEach((sec) => observer.observe(sec));
     })();
 </script>
-        const posts = [...(byCategory.get(cat) || [])].sort(
-            (a, b) => b.data.date.getTime() - a.data.date.getTime()
-        );
-        return { id: `cat-${cat}`, title, posts };
-    });
----
