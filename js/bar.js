@@ -25,10 +25,11 @@ function renderArticles(articles) {
         const safeTitle = escapeHTML(article.title || '');
         const safeExcerpt = escapeHTML(article.excerpt || '');
         const safeAuthor = escapeHTML(article.author || '');
+        const articleUrl = `articolo.html?file=${encodeURIComponent(article.fileName)}`;
 
         return `
-            <article class="content-card article-card">
-                ${article.featured_image ? `<img src="${article.featured_image}" alt="${safeTitle}" class="card-image" loading="lazy">` : ''}
+            <a href="${articleUrl}" class="content-card article-card article-card-link" aria-label="Leggi: ${safeTitle}">
+                ${article.featured_image ? `<img src="${article.featured_image}" alt="" aria-hidden="true" tabindex="-1" class="card-image" loading="lazy">` : ''}
                 <div class="article-card-tags">
                     <span class="card-tag ${tagClass}">${tagLabel}</span>
                     ${gpxBadge}
@@ -40,8 +41,8 @@ function renderArticles(articles) {
                     <span>·</span>
                     <span>${safeAuthor}</span>
                 </div>
-                <a href="articolo.html?file=${encodeURIComponent(article.fileName)}" class="card-link">Leggi di più →</a>
-            </article>
+                <span class="card-link">Leggi di più →</span>
+            </a>
         `;
     }).join('');
 }

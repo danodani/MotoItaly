@@ -1155,6 +1155,41 @@ a.wiki-cat-card {
     border-radius: calc(var(--radius) - 4px);
 }
 
+a.article-card-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+a.article-card-link h3 {
+    color: var(--color-text);
+}
+
+a.article-card-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+/* ===== IMMAGINI NEL CORPO ARTICOLO (responsive, proporzioni originali) ===== */
+.article-body img,
+.article-featured-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.article-body img {
+    margin: 24px auto;
+    border-radius: var(--radius);
+}
+
+.article-featured-image {
+    width: 100%;
+    margin: 24px 0;
+    border-radius: var(--radius);
+    object-fit: contain;
+}
+
 .article-meta {
     display: flex;
     align-items: center;
