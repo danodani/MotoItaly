@@ -144,6 +144,9 @@ body {
 /* Ordine header: logo | nav | azioni (tema) nell'angolo destro */
 .main-nav {
     order: 1;
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 /* Icona tema sempre per ultima = angolo destro (su mobile dopo l'hamburger) */
@@ -192,14 +195,18 @@ html[data-theme="dark"] .theme-icon-dark {
 
 .main-nav a {
     text-decoration: none;
-    color: var(--color-text-muted);
-    font-weight: 500;
+    color: var(--color-primary);
+    font-weight: 700;
     font-size: 0.95rem;
     transition: color 0.2s;
 }
 
 .main-nav a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary-hover);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
 }
 
 .menu-toggle {
@@ -790,6 +797,8 @@ html[data-theme="dark"] .theme-icon-dark {
         top: 64px;
         left: 0;
         right: 0;
+        flex: none;
+        justify-content: flex-start;
         background: var(--color-card-bg);
         border-bottom: 1px solid var(--color-border);
         padding: 16px 20px;
@@ -797,11 +806,22 @@ html[data-theme="dark"] .theme-icon-dark {
 
     .main-nav.open {
         display: block;
+        flex: none;
     }
 
     .main-nav ul {
         flex-direction: column;
         gap: 16px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .main-nav.open a {
+        color: var(--color-primary);
+    }
+
+    .main-nav.open a:hover {
+        color: var(--color-primary-hover);
     }
 
     .hero {
