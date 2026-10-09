@@ -1569,6 +1569,102 @@ a.article-card-link:focus-visible {
     }
 }
 
+/* ===== FAQ — ACCORDION (details/summary) ===== */
+.faq-category {
+    margin-bottom: 40px;
+}
+
+.faq-list {
+    border-top: 1px solid var(--color-border);
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    list-style: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Rimuove la freccia nativa (cross-browser) */
+.faq-question::-webkit-details-marker {
+    display: none;
+}
+
+.faq-question::after {
+    content: '+';
+    flex-shrink: 0;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-primary);
+    transition: transform 0.25s ease;
+}
+
+.faq-item[open] > .faq-question::after {
+    content: '−';
+}
+
+.faq-question:hover {
+    background: var(--color-bg-alt);
+    color: var(--color-primary);
+}
+
+.faq-question:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.faq-answer {
+    padding: 0 20px 18px;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.faq-answer p {
+    margin: 0 0 10px;
+}
+
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
+
+.faq-link {
+    font-size: 0.9rem;
+}
+
+.faq-link a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.faq-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .faq-question {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+    }
+
+    .faq-answer {
+        padding: 0 16px 16px;
+    }
+}
+
 /* ===== DISCLAIMER AFFILIAZIONI NEL FOOTER ===== */
 .site-footer .footer-disclaimer {
     max-width: 640px;
