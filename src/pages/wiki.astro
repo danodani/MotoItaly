@@ -1,0 +1,120 @@
+---
+// ============================================================
+// src/pages/wiki.astro — indice Wiki & Guide (build statico)
+// ------------------------------------------------------------
+// Sostituisce il vecchio public/wiki.html + js/wiki.js che
+// caricavano via API: ora gli articoli arrivano da
+// getCollection('wiki') e le pagine HTML sono generate a build.
+// ============================================================
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+// Categorie della wiki (stessi slug/sfaccettature di prima)
+const WIKI_CATEGORIES = [
+    { slug: 'neofiti', icon: '📖', title: 'Guide per Neofiti' },
+    { slug: 'manutenzione', icon: '🔧', title: 'Manutenzione e Riparazioni' },
+    { slug: 'normative', icon: '📜', title: 'Normative e Burocrazia' },
+    { slug: 'sicurezza', icon: '🛡️', title: 'Sicurezza e Abbigliamento' },
+    { slug: 'viaggi', icon: '🗺️', title: 'Viaggi e Itinerari' },
+    { slug: 'faq', icon: '❓', title: 'FAQ' },
+];
+
+const formatDateIT = (d: Date) =>
+    d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+
+// Tutti gli articoli wiki, raggruppati per categoria
+const allPosts = await getCollection('wiki', ({ data }) => Boolean(data.title));
+
+const byCategory = new Map<string, typeof allPosts>();
+for (const post of allPosts) {
+    const cat = post.data.categoria || 'uncategorized';
+    if (!byCategory.has(cat)) byCategory.set(cat, []);
+    byCategory.get(cat)!.push(post);
+}
+
+// Ordine: le 6 categorie canoniche, poi le guide senza categoria
+const categoryOrder = [...WIKI_CATEGORIES.map((c) => c.slug), 'uncategorized'];
+
+const sections = categoryOrder
+    .filter((cat) => (byCategory.get(cat) || []).length > 0)
+    .map((cat) => {
+        const catInfo = WIKI_CATEGORIES.find((c) => c.slug === cat);
+        const title = catInfo ? `${catInfo.icon} ${catInfo.title}` : '📁 Altre guide';
+<Layout
+    title="Wiki & Guide - Moto Italy"
+    description="Wiki & Guide per motociclisti: guide pratiche su manutenzione, sicurezza, viaggi e molto altro."
+    showDisclaimer={true}
+>
+    <main class="page-content">
+        <div class="container wiki-index-container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> <span>/</span> <span>Wiki &amp; Guide</span>
+            </nav>
+            <header class="wiki-index-header">
+                <h1 class="page-title">📚 Wiki &amp; Guide</h1>
+                <p class="page-subtitle">Guide pratiche, normative e consigli per ogni aspetto della vita in moto.</p>
+            </header>
+
+            <div class="wiki-index-layout">
+                <!-- Sidebar categorie (segnalibri) -->
+                <aside class="wiki-sidebar" id="wikiSidebar" aria-label="Categorie Wiki">
+                    <nav class="wiki-toc" id="wikiToc">
+                        <span class="wiki-toc-title">In questa pagina</span>
+                        <ul id="wikiTocList">
+                            {sections.map((section) => (
+                                <li><a href={`#${section.id}`} class="wiki-toc-link">{section.title}</a></li>
+                            ))}
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Contenuto principale: articoli per categoria -->
+                <section class="wiki-main" id="wikiMain">
+                    {sections.map((section) => (
+                        <section class="wiki-category-section" id={section.id} aria-labelledby={`${section.id}-title`}>
+                            <h2 class="wiki-category-title" id={`${section.id}-title`}>{section.title}</h2>
+                            <ul class="wiki-article-list">
+                                {section.posts.map((post) => (
+                                    <li class="wiki-article-item">
+                                        <a href={`/wiki/${post.id}`} class="wiki-article-link">
+                                            <span class="wiki-article-title">{post.data.title}</span>
+                                            <span class="wiki-article-meta">{formatDateIT(post.data.date)}</span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    ))}
+                </section>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script is:inline>
+    // Scroll spy: evidenzia la categoria visibile nel TOC laterale
+    (function() {
+        const tocLinks = document.querySelectorAll('.wiki-toc-link');
+        const sections = document.querySelectorAll('.wiki-category-section');
+        if (!tocLinks.length || !sections.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    tocLinks.forEach((link) => {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+        sections.forEach((sec) => observer.observe(sec));
+    })();
+</script>
+        const posts = [...(byCategory.get(cat) || [])].sort(
+            (a, b) => b.data.date.getTime() - a.data.date.getTime()
+        );
+        return { id: `cat-${cat}`, title, posts };
+    });
+---

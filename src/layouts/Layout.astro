@@ -12,9 +12,10 @@ interface Props {
     description: string;
     ogTitle?: string;
     canonicalUrl?: string;
+    showDisclaimer?: boolean;
 }
 
-const { title, description, ogTitle, canonicalUrl } = Astro.props;
+const { title, description, ogTitle, canonicalUrl, showDisclaimer = false } = Astro.props;
 
 const SITE_URL = 'https://motoitaly.pages.dev';
 const pageTitle = title;
@@ -87,10 +88,10 @@ const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
 
             <nav class="main-nav" id="mainNav">
                 <ul>
-                    <li><a href="/wiki.html">Wiki &amp; Guide</a></li>
+                    <li><a href="/wiki">Wiki &amp; Guide</a></li>
                     <li><a href="/faq.html">FAQ</a></li>
                     <li><a href="/strumenti.html">Strumenti Utili</a></li>
-                    <li><a href="/bar.html">Il Bar del Motociclista</a></li>
+                    <li><a href="/bar">Il Bar del Motociclista</a></li>
                 </ul>
             </nav>
         </div>
@@ -105,6 +106,13 @@ const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
                 <a href="/contatti.html">Contattaci</a>
             </nav>
             <p>&copy; 2026 Moto Italy. Tutti i diritti riservati.</p>
+            {showDisclaimer && (
+                <p class="footer-disclaimer">
+                    <strong>Trasparenza:</strong> Alcuni link in questa pagina possono essere link di affiliazione.
+                    Se acquisti tramite essi, potremmo ricevere una piccola commissione senza costi aggiuntivi per te.
+                    Questo ci aiuta a mantenere il sito attivo e gratuito.
+                </p>
+            )}
         </div>
     </footer>
 

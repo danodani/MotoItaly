@@ -1,0 +1,58 @@
+---
+// ============================================================
+// src/pages/bar.astro — indice "Il Bar del Motociclista"
+// ------------------------------------------------------------
+// Sostituisce public/bar.html + js/bar.js (fetch client-side):
+// le card sono generate a build da getCollection('bar').
+// ============================================================
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const formatDateIT = (d: Date) =>
+    d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+
+const posts = (await getCollection('bar', ({ data }) => Boolean(data.title))).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<Layout
+    title="Il Bar del Motociclista - Moto Italy"
+    description="Il Bar del Motociclista: storie, opinioni, test di accessori e avventure dal mondo delle due ruote."
+    showDisclaimer={true}
+>
+    <main class="page-content">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> <span>/</span> <span>Il Bar del Motociclista</span>
+            </nav>
+            <h1 class="page-title">☕ Il Bar del Motociclista</h1>
+            <p class="page-subtitle">Storie, recensioni e opinioni dal mondo delle due ruote. Tono informale, zero peli sulla lingua.</p>
+
+            <div class="cards-grid">
+                {posts.map((post) => (
+                    <a
+                        href={`/bar/${post.id}`}
+                        class="content-card article-card article-card-link"
+                        aria-label={`Leggi: ${post.data.title}`}
+                    >
+                        {post.data.featured_image && (
+                            <img src={post.data.featured_image} alt="" aria-hidden="true" tabindex="-1" class="card-image" loading="lazy">
+                        )}
+                        <div class="article-card-tags">
+                            <span class="card-tag tag-bar">☕ Da Bar</span>
+                        </div>
+                        <h3>{post.data.title}</h3>
+                        <p class="article-excerpt">{post.data.excerpt}</p>
+                        <div class="article-meta">
+                            <span>{formatDateIT(post.data.date)}</span>
+                            <span>·</span>
+                            <span>{post.data.author}</span>
+                        </div>
+                        <span class="card-link">Leggi di più →</span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </main>
+</Layout>
