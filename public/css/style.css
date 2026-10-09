@@ -138,6 +138,17 @@ body {
     align-items: center;
     gap: 8px;
     margin-left: auto;
+    order: 2;
+}
+
+/* Ordine header: logo | nav | azioni (tema) nell'angolo destro */
+.main-nav {
+    order: 1;
+}
+
+/* Icona tema sempre per ultima = angolo destro (su mobile dopo l'hamburger) */
+.header-actions .theme-toggle {
+    order: 1;
 }
 
 /* ===== THEME TOGGLE ===== */
