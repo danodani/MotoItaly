@@ -65,6 +65,18 @@ const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
             </a>
 
             <div class="header-actions">
+                <!-- Ricerca desktop: lente che si espande in input -->
+                <div class="search-container search-container-desktop" id="searchDesktop">
+                    <button class="search-toggle-btn" id="searchToggle" aria-label="Cerca nel sito" title="Cerca">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    <input type="text" class="search-input search-input-desktop" placeholder="Cerca guide e articoli..." aria-label="Cerca guide e articoli" autocomplete="off">
+                    <div class="search-results-dropdown" role="listbox"></div>
+                </div>
+
                 <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
                     <span class="theme-icon theme-icon-light" aria-hidden="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -93,6 +105,11 @@ const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
                     <li><a href="/strumenti.html">Strumenti Utili</a></li>
                     <li><a href="/bar">Il Bar del Motociclista</a></li>
                 </ul>
+                <!-- Ricerca mobile: campo visibile in fondo al menu hamburger -->
+                <div class="search-container search-mobile" id="searchMobile">
+                    <input type="text" class="search-input" placeholder="Cerca guide e articoli..." aria-label="Cerca guide e articoli" autocomplete="off">
+                    <div class="search-results-dropdown" role="listbox"></div>
+                </div>
             </nav>
         </div>
     </header>
@@ -117,5 +134,111 @@ const url = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
     </footer>
 
     <script src="/js/script.js" defer></script>
+
+    <script>
+        // ===== Ricerca client-side (desktop + mobile) =====
+        // Indice caricato una sola volta (/search.json generato al build)
+        let searchIndexPromise = null;
+        const ensureIndex = () => {
+            if (!searchIndexPromise) {
+                searchIndexPromise = fetch('/search.json')
+                    .then((r) => r.json())
+                    .catch(() => {
+                        searchIndexPromise = null; // permette il retry al focus successivo
+                        return [];
+                    });
+            }
+            return searchIndexPromise;
+        };
+
+        function renderResults(container, query) {
+            const dropdown = container.querySelector('.search-results-dropdown');
+            if (!dropdown) return;
+            const q = query.trim().toLowerCase();
+            if (q.length < 2) {
+                dropdown.classList.remove('open');
+                dropdown.innerHTML = '';
+                return;
+            }
+            ensureIndex().then((items) => {
+                const matches = items
+                    .filter((it) =>
+                        (it.title || '').toLowerCase().includes(q) ||
+                        (it.excerpt || '').toLowerCase().includes(q))
+                    .slice(0, 8);
+                dropdown.innerHTML = '';
+                if (!matches.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'search-result-empty';
+                    empty.textContent = `Nessun risultato per "${query.trim()}"`;
+                    dropdown.appendChild(empty);
+                } else {
+                    matches.forEach((it) => {
+                        const a = document.createElement('a');
+                        a.href = it.url;
+                        a.className = 'search-result-item';
+                        const t = document.createElement('span');
+                        t.className = 'search-result-title';
+                        t.textContent = it.title;
+                        const b = document.createElement('span');
+                        b.className = 'search-result-badge';
+                        b.textContent = it.collection === 'wiki' ? 'Wiki' : 'Bar';
+                        a.appendChild(t);
+                        a.appendChild(b);
+                        if (it.excerpt) {
+                            const x = document.createElement('span');
+                            x.className = 'search-result-excerpt';
+                            x.textContent = it.excerpt + '…';
+                            a.appendChild(x);
+                        }
+                        dropdown.appendChild(a);
+                    });
+                }
+                dropdown.classList.add('open');
+            });
+        }
+
+        document.querySelectorAll('.search-container').forEach((container) => {
+            const input = container.querySelector('.search-input');
+            if (!input) return;
+            input.addEventListener('focus', ensureIndex); // prefetch al primo focus
+            input.addEventListener('input', () => renderResults(container, input.value));
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    input.value = '';
+                    renderResults(container, '');
+                    input.blur();
+                }
+                if (e.key === 'Enter') {
+                    const first = container.querySelector('.search-result-item');
+                    if (first) window.location.href = first.getAttribute('href');
+                }
+            });
+        });
+
+        // Toggle desktop: la lente si espande in input; click fuori = chiudi e svuota
+        const searchDesktop = document.getElementById('searchDesktop');
+        const searchToggle = document.getElementById('searchToggle');
+        const searchDesktopInput = searchDesktop?.querySelector('.search-input');
+        if (searchDesktop && searchToggle && searchDesktopInput) {
+            searchToggle.addEventListener('click', () => {
+                const open = searchDesktop.classList.toggle('search-open');
+                if (open) {
+                    ensureIndex();
+                    searchDesktopInput.focus();
+                } else {
+                    searchDesktopInput.value = '';
+                    renderResults(searchDesktop, '');
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!searchDesktop.contains(e.target)) {
+                    searchDesktop.classList.remove('search-open');
+                    searchDesktopInput.value = '';
+                    renderResults(searchDesktop, '');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -228,6 +228,166 @@ html[data-theme="dark"] .theme-icon-dark {
     transition: 0.3s;
 }
 
+/* ===== RICERCA HEADER ===== */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Dentro .header-actions: la ricerca sta prima del toggle tema */
+.search-container-desktop {
+    order: 0;
+}
+
+.search-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.search-toggle-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.search-input {
+    height: 40px;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Desktop: input chiuso a larghezza 0, si espande con transizione */
+.search-input-desktop {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    border-width: 0;
+    transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
+}
+
+.search-container-desktop.search-open .search-input-desktop {
+    width: 220px;
+    opacity: 1;
+    padding: 0 14px;
+    border-width: 1px;
+}
+
+/* Dropdown risultati */
+.search-results-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 300px;
+    max-width: 360px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    z-index: 300;
+    /* Scrollbar tema (Firefox): sottile e colorata dal tema chiaro/scuro */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) var(--color-card-bg);
+}
+
+/* Scrollbar tema (WebKit: Chrome, Edge, Safari) */
+.search-results-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-track {
+    background: var(--color-card-bg);
+    border-radius: 4px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 4px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-muted);
+}
+
+.search-results-dropdown.open {
+    display: block;
+}
+
+.search-result-item {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: var(--color-bg-alt);
+}
+
+.search-result-title {
+    display: block;
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+.search-result-badge {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+.search-result-excerpt {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.search-result-empty {
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+/* Campo ricerca mobile: nascosto su desktop */
+.search-mobile {
+    display: none;
+}
+
 /* ===== HERO ===== */
 .hero {
     padding: 80px 0 60px;
@@ -822,6 +982,29 @@ html[data-theme="dark"] .theme-icon-dark {
 
     .main-nav.open a:hover {
         color: var(--color-primary-hover);
+    }
+
+    /* Ricerca: nascosta lente desktop, campo visibile in fondo al menu */
+    .search-container-desktop {
+        display: none;
+    }
+
+    .search-mobile {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .search-mobile .search-input {
+        width: 100%;
+        padding: 10px 14px;
+    }
+
+    .search-mobile .search-results-dropdown {
+        left: 0;
+        right: 0;
+        min-width: 0;
+        max-width: none;
     }
 
     .hero {
